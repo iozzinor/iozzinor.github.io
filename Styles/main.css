@@ -1,0 +1,131 @@
+/*******************************************************************************
+ * COLORS
+ ******************************************************************************/
+:root
+{
+	--background-color: #FEFEFE;
+	--color: #454545;
+    --even-background-color: #EEE;
+    --error-color: red;
+}
+
+@media (prefers-color-scheme: dark)
+{
+	:root
+	{
+		--background-color: #111;
+		--color: #EEE;
+        --even-background-color: #0A0A0A;
+	}
+
+	a
+	{
+		color: darkgray;
+	}
+
+	a:visited
+	{
+		color: gray;
+	}
+}
+
+/*******************************************************************************
+ * MAIN STRUCTURE
+ ******************************************************************************/
+header
+{
+    border-bottom: 2px solid var(--color);
+    font-size: 3em;
+}
+
+header p
+{
+    margin: 0;
+}
+
+header a[href="/"]
+{
+    color: inherit;
+    text-decoration: none;
+}
+
+header a[href="/"]:before
+{
+    content: "iozzinor";
+}
+
+body
+{
+	color: var(--color);
+	background-color: var(--background-color);
+}
+
+main
+{
+	width: 80%;
+	margin: auto;
+}
+
+/*******************************************************************************
+ * SEPARATOR
+ ******************************************************************************/
+.separator
+{
+	width: 90%;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 1em;
+	margin-bottom: 1em;
+	border-bottom: solid 1px var(--color);
+}
+
+/*******************************************************************************
+ * INPUTS
+ ******************************************************************************/
+input
+{
+    background-color: var(--background-color);
+    color: var(--color);
+    border: none;
+}
+
+input:focus
+{
+    outline: none;
+}
+
+input[type=button]
+{
+    border-radius: 0.5em;
+}
+
+input[type=button],
+input[type=button]:hover:active
+{
+    color: var(--background-color);
+    background-color: var(--color);
+}
+
+input[type=button]:hover
+{
+    color: var(--color);
+    background-color: var(--background-color);
+}
+
+/*******************************************************************************
+ * EVEN ODD
+ ******************************************************************************/
+.even
+{
+    background-color: var(--even-background-color);
+}
+
+.odd {}
+
+/*******************************************************************************
+ * ERROR
+ ******************************************************************************/
+.error
+{
+    color: var(--error-color);
+}

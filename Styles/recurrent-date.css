@@ -1,0 +1,66 @@
+#configuration table
+{
+	margin: auto;
+	width: 80%;
+}
+
+#configuration table th
+{
+	width: 25%;
+	max-width: 50%;
+	padding-right: 1em;
+	text-align: right;
+}
+
+#configuration table td input
+{
+	width: 80%;
+}
+
+#interval_result_list
+{
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1.5em;
+    margin-bottom: 2em;
+    border-collapse: collapse;
+}
+
+#interval_result_list th
+{
+    border-top: 0.5px solid var(--color);
+    border-bottom: 0.5px solid var(--color);
+    text-align: left;
+}
+
+#interval_result_list .index.temporary
+{
+    color: rgba(0,0,0,0);
+}
+
+#interval_result_list tr:hover .index.temporary
+{
+    color: inherit;
+}
+
+#interval_result_list tr:hover .index
+{
+    font-weight: bold;
+}
+
+#interval_result_list .index
+{
+    min-width: 5%;
+    width: 5%;
+    max-width: 5%;
+}
+
+#interval_result_list .date
+{
+    padding-left: 1em;
+    padding-right: 1em;
+    min-width: 10%;
+    width: 15%;
+    max-width: 20%;
+}

@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<link rel="stylesheet" href="/Styles/main.css" />
+		<link rel="stylesheet" href="/Styles/recurrent-date.css" />
+		<title>Recurrent date calculator</title>
+	</head>
+	<body>
+		<header><a href="/"></a></header>
+		<main>
+			<h1>Recurrent date calculator</h1>
+			<p>Compute a recurrent interval.</p>
+
+			<div id="configuration">
+				<table>
+					<tr title="The start date.">
+						<th>Start date:</th>
+						<td><input id="start_date" type="date" placeholder="dd/mm/yyyy"/></td>
+					</tr>
+					<tr title="The interval of the recurrence, expressed in days.">
+						<th>Interval:</th>
+						<td><input id="interval" type="text" placeholder="interval..." /></td>
+					</tr>
+					<tr title="The number of times the recurrence should occur.">
+						<th>Repeat count:</th>
+						<td><input id="repeat_count" type="text" placeholder="repeat count..." /></td>
+					</tr>
+				</table>
+			</div>
+
+			<div class="separator"></div>
+
+			<div id="interval_result">
+				<table id="interval_result_list" style="display: none;">
+					<tr>
+						<th class="recurrent_index"></th>
+						<th>Date</th>
+						<th>Day</th>
+					</tr>
+				</table>
+				<p id="interval_result_error" class="error" style="display: none;"></p>
+			</div>
+
+			<input id="compute" type="button" value="Compute!" />
+		</main>
+		<script src="/Scripts/recurrent-date.js"></script>
+	</body>
+</html>
