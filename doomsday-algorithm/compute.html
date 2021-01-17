@@ -1,0 +1,119 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Doosmday - compute</title>
+		<link rel="stylesheet" href="/Styles/main.css" />
+		<link rel="stylesheet" href="/Styles/doomsday-algorithm/compute.css" />
+	</head>
+	<body>
+		<header>
+			<a href="/"></a>
+		</header>
+		<main>
+			<h1>Doomsday algorithm - compute</h1>
+			<h2>Input</h2>
+			<table id="input">
+				<tr>
+					<th>Date:</th>
+					<td><input id="date" type="date" placeholder="dd/mm/yyyy" /></td>
+					<td class="error"></td>
+				</tr>
+				<tr>
+					<th>Day:</th>
+					<td><input id="day" type="text" placeholder="dd" /></td>
+					<td class="error"></td>
+				</tr>
+				<tr>
+					<th>Month:</th>
+					<td><input id="month" type="text" placeholder="mm" /></td>
+					<td class="error"></td>
+				</tr>
+				<tr>
+					<th>Year:</th>
+					<td><input id="year" type="text" placeholder="yyyy" /></td>
+					<td class="error"></td>
+				</tr>
+			</table>
+			<p id="doomsday_example-week_day"></p>
+			<h2>Method</h2>
+			<ol>
+				<li>
+					<p>Get the year anchor</p>
+					<p>The full year should be divided in two parts: the highest one and the lowest one.</p>
+					<p><code>year_high</code> = <code>full_year</code> / <span class="code-constant">100</span><span id="doomsday_example-year_high"></span></p>
+					<p><code>year_low</code> = <code>full_year</code> % <span class="code-constant">100</span><span id="doomsday_example-year_low"></span></p>
+
+					<p>The high part of the full year is used as an entry of the following lookup table:</p>
+					<table id="year_lookup_table" class="lookup">
+						<tr><th><code>year_high</code> % <span class="code-constant">4</span></th><th>Value</th></tr>
+						<tr class="even"><td>0</td><td>2</td></tr>
+						<tr class="odd"> <td>1</td><td>0</td></tr>
+						<tr class="even"><td>2</td><td>5</td></tr>
+						<tr class="odd"> <td>3</td><td>3</td></tr>
+					</table>
+
+					<p>Let <code>a</code>, <code>b</code>, <code>c</code> and <code>d</code> be four integer such as:</p>
+					<p><code>a</code> = year_high_lookup(<code>year_high</code> % <span class="code-constant">4</span>)<span id="doomsday_example-a"></span></p>
+					<p><code>b</code> = <code>year_low</code> / <span class="code-constant">12</span><span id="doomsday_example-b"></span></p>
+					<p><code>c</code> = <code>year_low</code> % <span class="code-constant">12</span><span id="doomsday_example-c"></span></p>
+					<p><code>d</code> = <code>c</code> / <span class="code-constant">4</span><span id="doomsday_example-d"></span></p>
+
+					<p>So:</p>
+					<p><code>year_anchor</code> = (<code>a</code> + <code>b</code> + <code>c</code> + <code>d</code>) % 7<span id="doomsday_example-year_anchor"></span></p>
+				</li>
+
+				<li>
+					Determine the day of the month, which matches the year anchor
+
+					<ol>
+						<li>
+							Is the year leap ?
+							<p>A year is said leap if it is dividible by <span class="code-constant">4</span> but not <span class="code-constant">100</span>.</p>
+							<p>It is also leap if dividible by <span class="code-constant">400</span>.</p>
+							<p id="doomsday_example-leap_year"></p>
+						</li>
+						<li>
+							<p>Retrieve the day of the month for which the day of the week is the year anchor by using the table below.</p>
+						</li>
+					</ol>
+
+					<table id="month_lookup_table" class="lookup">
+						<tr><th>Month</th><th>First day of the month matching the year anchor (leap year)</th></tr>
+						<tr class="even"><td>January</td>   <td>3 (4)</td></tr>
+						<tr class="odd"> <td>February</td>  <td>7 (1)</td></tr>
+						<tr class="even"><td>March</td>     <td>7</td></tr>
+						<tr class="odd"> <td>April</td>     <td>4</td></tr>
+						<tr class="even"><td>May</td>       <td>2</td></tr>
+						<tr class="odd"> <td>June</td>      <td>6</td></tr>
+						<tr class="even"><td>July</td>      <td>4</td></tr>
+						<tr class="odd"> <td>August</td>    <td>1</td></tr>
+						<tr class="even"><td>September</td> <td>5</td></tr>
+						<tr class="odd"> <td>October</td>   <td>3</td></tr>
+						<tr class="even"><td>November</td>  <td>7</td></tr>
+						<tr class="odd"> <td>December</td>  <td>5</td></tr>
+					</table>
+				</li>
+
+				<li>
+					Determine the week day
+					<p>The week day might be computed:</p>
+					<p><code>week_day_code</code> = (<code>year_anchor</code> + <code>day</code> - <code>month_anchor</code>) % <span class="code-constant">7</span><span id="doomsday_example-week_day_code"></span></p>
+					<p>Then the obtained code should be looked into the following table.</p>
+					<table id="day_lookup_table" class="lookup">
+						<tr><th>Code</th><th>Week day</th></tr>
+						<tr class="even"><td>0</td><td>Sunday</td></tr>
+						<tr class="odd"> <td>1</td><td>Monday</td></tr>
+						<tr class="even"><td>2</td><td>Tuesday</td></tr>
+						<tr class="odd"> <td>3</td><td>Wednesday</td></tr>
+						<tr class="even"><td>4</td><td>Thursday</td></tr>
+						<tr class="odd"> <td>5</td><td>Friday</td></tr>
+						<tr class="even"><td>6</td><td>Saturday</td></tr>
+						</table>
+					</table>
+				</li>
+			</ol>
+		</main>
+		<script src="/Scripts/doomsday-algorithm/compute.js"></script>
+	</body>
+</html>

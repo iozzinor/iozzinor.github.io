@@ -93,8 +93,8 @@
 		repeatCount: document.getElementById('repeat_count'),
 		intervalResult: {
 			container: document.getElementById('interval_result'),
-			list: document.getElementById('interval_result_list'),
-			errorParagraph: document.getElementById('interval_result_error')
+			list: document.getElementById('interval_result-list'),
+			errorParagraph: document.getElementById('interval_result-error')
 		},
 		compute: document.getElementById('compute')
 	};

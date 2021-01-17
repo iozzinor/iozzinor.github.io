@@ -1,0 +1,52 @@
+#input
+{
+	margin: auto;
+	width: 80%;
+}
+
+#input th
+{
+	width: 10%;
+	text-align: right;
+	padding-right: 2em;
+}
+
+#input td
+{
+	width: 45%;
+}
+
+ol ol
+{
+	list-style-type: lower-alpha;
+}
+
+.lookup
+{
+	margin: auto;
+	width: 50vw;
+}
+
+.lookup th
+{
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	width: 50%;
+	border-bottom: solid 1px var(--color);
+}
+
+.lookup th:not(:last-child),
+.lookup td:not(:last-child)
+{
+	border-right: solid 1px var(--color);
+}
+
+.lookup th, .lookup td
+{
+	text-align: center;
+}
+
+.example_value
+{
+	color: var(--contrast-color);
+}

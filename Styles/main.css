@@ -5,8 +5,13 @@
 {
 	--background-color: #FEFEFE;
 	--color: #454545;
-    --even-background-color: #EEE;
-    --error-color: red;
+
+	--contrast-color: orange;
+
+	--even-background-color: #EEE;
+	--error-color: red;
+	--code-background-color: lightgray;
+	--code-constant-color: blue;
 }
 
 @media (prefers-color-scheme: dark)
@@ -15,7 +20,9 @@
 	{
 		--background-color: #111;
 		--color: #EEE;
-        --even-background-color: #0A0A0A;
+		--even-background-color: #0A0A0A;
+		--code-background-color: rgba(240,240,240,0.15);
+		--code-constant-color: #33F;
 	}
 
 	a
@@ -34,24 +41,24 @@
  ******************************************************************************/
 header
 {
-    border-bottom: 2px solid var(--color);
-    font-size: 3em;
+	border-bottom: 2px solid var(--color);
+	font-size: 3em;
 }
 
 header p
 {
-    margin: 0;
+	margin: 0;
 }
 
 header a[href="/"]
 {
-    color: inherit;
-    text-decoration: none;
+	color: inherit;
+	text-decoration: none;
 }
 
 header a[href="/"]:before
 {
-    content: "iozzinor";
+	content: "iozzinor";
 }
 
 body
@@ -84,48 +91,71 @@ main
  ******************************************************************************/
 input
 {
-    background-color: var(--background-color);
-    color: var(--color);
-    border: none;
+	background-color: var(--background-color);
+	color: var(--color);
+	border: none;
 }
 
 input:focus
 {
-    outline: none;
+	outline: none;
 }
 
 input[type=button]
 {
-    border-radius: 0.5em;
+	border-radius: 0.5em;
 }
 
 input[type=button],
 input[type=button]:hover:active
 {
-    color: var(--background-color);
-    background-color: var(--color);
+	color: var(--background-color);
+	background-color: var(--color);
 }
 
 input[type=button]:hover
 {
-    color: var(--color);
-    background-color: var(--background-color);
+	color: var(--color);
+	background-color: var(--background-color);
 }
 
 /*******************************************************************************
- * EVEN ODD
+ * TABLE
  ******************************************************************************/
+table
+{
+	border-collapse: collapse;
+}
+
 .even
 {
-    background-color: var(--even-background-color);
+	background-color: var(--even-background-color);
 }
 
 .odd {}
+
+/*******************************************************************************
+ * CODE
+ ******************************************************************************/
+code
+{
+	background-color: var(--code-background-color);
+	border-radius: 0.4em;
+	padding-top: 0.1em;
+	padding-bottom: 0.1em;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+}
+
+.code-constant
+{
+	color: var(--code-constant-color);
+}
 
 /*******************************************************************************
  * ERROR
  ******************************************************************************/
 .error
 {
-    color: var(--error-color);
+	color: var(--error-color);
 }
