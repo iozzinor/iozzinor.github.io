@@ -1,0 +1,17 @@
+table td, table th
+{
+	border: solid 1px var(--color);
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+table
+{
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.borderless
+{
+	border: none;
+}

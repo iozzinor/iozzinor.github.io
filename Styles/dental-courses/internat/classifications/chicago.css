@@ -1,0 +1,18 @@
+.criteria
+{
+	text-align: left;
+}
+
+td
+{
+	text-align: center;
+}
+
+th.selected,
+td.value.selected,
+td.value:hover
+{
+	color: var(--background-color);
+	background-color: var(--color);
+}
+

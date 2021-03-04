@@ -12,51 +12,61 @@
 	--error-color: red;
 	--code-background-color: lightgray;
 	--code-constant-color: blue;
+
+	--advantage: green;
+	--drawback: red;
+
+	--scheme-1: blue;
+	--scheme-2: darkblue;
+	--scheme-3: darkgreen;
+
+	--gradient-1: #1DB100;
+	--gradient-2: #FFD932;
+	--gradient-3: #FEAE00;
+	--gradient-4: #F27200;
+	--gradient-5: red;
+	--gradient-6: #B51700;
 }
 
-@media (prefers-color-scheme: dark)
-{
-	:root
-	{
-		--background-color: #111;
-		--color: #EEE;
-		--even-background-color: #0A0A0A;
-		--code-background-color: rgba(240,240,240,0.15);
-		--code-constant-color: #33F;
-	}
+.advantage { color: var(--advantage); }
+.drawback { color: var(--drawback); }
 
-	a
-	{
-		color: darkgray;
-	}
+.scheme_1 { color: var(--scheme-1); }
+.scheme_2 { color: var(--scheme-2); }
+.scheme_3 { color: var(--scheme-3); }
 
-	a:visited
-	{
-		color: gray;
-	}
-}
+.gradient_1 { color: var(--gradient-1); }
+.gradient_2 { color: var(--gradient-2); }
+.gradient_3 { color: var(--gradient-3); }
+.gradient_4 { color: var(--gradient-4); }
+.gradient_5 { color: var(--gradient-5); }
+.gradient_6 { color: var(--gradient-6); }
 
 /*******************************************************************************
  * MAIN STRUCTURE
  ******************************************************************************/
 header
 {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
 	border-bottom: 2px solid var(--color);
-	font-size: 3em;
 }
 
 header p
 {
 	margin: 0;
+	font-size: 3em;
 }
 
-header a[href="/"]
+header a.home
 {
+	font-size: 3em;
 	color: inherit;
 	text-decoration: none;
 }
 
-header a[href="/"]:before
+header a.home:before
 {
 	content: "iozzinor";
 }
@@ -84,6 +94,16 @@ main
 	margin-top: 1em;
 	margin-bottom: 1em;
 	border-bottom: solid 1px var(--color);
+}
+
+/*******************************************************************************
+ * SECTION
+ ******************************************************************************/
+section
+{
+	margin-bottom: 2em;
+	border-radius: 0.5em;
+	box-shadow: 1px 1px 1px 1px var(--color);
 }
 
 /*******************************************************************************
@@ -158,4 +178,61 @@ code
 .error
 {
 	color: var(--error-color);
+}
+
+/*******************************************************************************
+ * THEME
+ ******************************************************************************/
+.theme_selection
+{
+	position: relative;
+	display: inline-block;
+	min-width: 10vw;
+}
+
+.theme_button
+{
+	width: 100%;
+	border: none;
+	color: var(--color);
+	background-color: var(--background-color);
+}
+
+.theme_button:hover, .theme_selection.selected .theme_button
+{
+	background-color: var(--color);
+	color: var(--background-color);
+}
+
+.theme_selection:hover .theme_list, .theme_selection.selected .theme_list
+{
+	display: block;
+}
+
+.theme_list
+{
+	list-style: none;
+	margin-top: 0;
+	padding-left: 0;
+
+	display: none;
+	position: absolute;
+	width: 100%;
+	overflow: auto;
+	z-index: 1;
+
+	background-color: var(--background-color);
+	box-shadow: 0px 1px 1px 0px var(--color);
+}
+
+.theme_list li a
+{
+	width: 100%;
+	display: inline-block;
+	text-decoration: none;
+}
+
+.theme_list li a:hover
+{
+	font-weight: bold;
 }

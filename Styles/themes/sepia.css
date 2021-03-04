@@ -1,0 +1,22 @@
+:root
+{
+	--color: #262625;
+	--background-color: #E1E1DB;
+	--even-background-color: #B3B1B0;
+
+	--scheme-1: #A36D0C;
+	--scheme-2: #3A2601;
+
+	--gradient-2: #A0A000;
+}
+
+a
+{
+	color: #2b79a2;
+	text-decoration: none;
+}
+
+a:hover
+{
+	text-decoration: underline;
+}

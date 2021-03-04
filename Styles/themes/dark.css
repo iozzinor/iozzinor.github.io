@@ -1,0 +1,29 @@
+:root
+{
+	--background-color: #111;
+	--color: #EEE;
+	--even-background-color: #0A0A0A;
+	--code-background-color: rgba(240,240,240,0.15);
+	--code-constant-color: #33F;
+
+	--scheme-1: #bebe74;
+	--scheme-2: orange;
+
+	--advantage: lightgreen;
+	--drawback: #be7474;
+}
+
+a
+{
+	color: darkgray;
+}
+
+a:visited
+{
+	color: gray;
+}
+
+strong
+{
+	background-color: rgba(255, 255, 255, 0.1);
+}
