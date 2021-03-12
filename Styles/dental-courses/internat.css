@@ -1,3 +1,9 @@
+table
+{
+	width: 100%;
+	border-collapse: collapse;
+}
+
 table td, table th
 {
 	border: solid 1px var(--color);
@@ -5,10 +11,9 @@ table td, table th
 	padding-right: 1em;
 }
 
-table
+table td ul, table th ul
 {
-	width: 100%;
-	border-collapse: collapse;
+	padding-left: 1em;
 }
 
 .borderless
