@@ -1,0 +1,194 @@
+{
+    "11": {
+        "mesioDistal": 8.5,
+        "buccoLingual": 7.0,
+        "crownHeight": 10.5,
+        "rootHeight": 13.0
+    },
+    "21": {
+        "mesioDistal": 8.5,
+        "buccoLingual": 7.0,
+        "crownHeight": 10.5,
+        "rootHeight": 13.0
+    },
+    "12": {
+        "mesioDistal": 6.5,
+        "buccoLingual": 6.0,
+        "crownHeight": 9.0,
+        "rootHeight": 13.0
+    },
+    "22": {
+        "mesioDistal": 6.5,
+        "buccoLingual": 6.0,
+        "crownHeight": 9.0,
+        "rootHeight": 13.0
+    },
+    "13": {
+        "mesioDistal": 7.5,
+        "buccoLingual": 8.0,
+        "crownHeight": 10.0,
+        "rootHeight": 17.0
+    },
+    "23": {
+        "mesioDistal": 7.5,
+        "buccoLingual": 8.0,
+        "crownHeight": 10.0,
+        "rootHeight": 17.0
+    },
+    "14": {
+        "mesioDistal": 7.0,
+        "buccoLingual": 9.0,
+        "crownHeight": 8.5,
+        "rootHeight": 14.0
+    },
+    "24": {
+        "mesioDistal": 7.0,
+        "buccoLingual": 9.0,
+        "crownHeight": 8.5,
+        "rootHeight": 14.0
+    },
+    "15": {
+        "mesioDistal": 7.0,
+        "buccoLingual": 9.0,
+        "crownHeight": 8.5,
+        "rootHeight": 14.0
+    },
+    "25": {
+        "mesioDistal": 7.0,
+        "buccoLingual": 9.0,
+        "crownHeight": 8.5,
+        "rootHeight": 14.0
+    },
+    "16": {
+        "mesioDistal": 11.0,
+        "buccoLingual": 11.0,
+        "crownHeight": 7.5,
+        "rootHeight": 13.0
+    },
+    "26": {
+        "mesioDistal": 11.0,
+        "buccoLingual": 11.0,
+        "crownHeight": 7.5,
+        "rootHeight": 13.0
+    },
+    "17": {
+        "mesioDistal": 9.0,
+        "buccoLingual": 10.0,
+        "crownHeight": 7.0,
+        "rootHeight": 12.0
+    },
+    "27": {
+        "mesioDistal": 9.0,
+        "buccoLingual": 10.0,
+        "crownHeight": 7.0,
+        "rootHeight": 12.0
+    },
+    "18": {
+        "mesioDistal": 8.5,
+        "buccoLingual": 10.0,
+        "crownHeight": 6.5,
+        "rootHeight": 11.0
+    },
+    "28": {
+        "mesioDistal": 8.5,
+        "buccoLingual": 10.0,
+        "crownHeight": 6.5,
+        "rootHeight": 11.0
+    },
+    "41": {
+        "mesioDistal": 5.0,
+        "buccoLingual": 6.0,
+        "crownHeight": 9.0,
+        "rootHeight": 12.5
+    },
+    "31": {
+        "mesioDistal": 5.0,
+        "buccoLingual": 6.0,
+        "crownHeight": 9.0,
+        "rootHeight": 12.5
+    },
+    "42": {
+        "mesioDistal": 5.5,
+        "buccoLingual": 6.5,
+        "crownHeight": 9.5,
+        "rootHeight": 14.0
+    },
+    "32": {
+        "mesioDistal": 5.5,
+        "buccoLingual": 6.5,
+        "crownHeight": 9.5,
+        "rootHeight": 14.0
+    },
+    "43": {
+        "mesioDistal": 7.0,
+        "buccoLingual": 7.5,
+        "crownHeight": 11.0,
+        "rootHeight": 16.0
+    },
+    "33": {
+        "mesioDistal": 7.0,
+        "buccoLingual": 7.5,
+        "crownHeight": 11.0,
+        "rootHeight": 16.0
+    },
+    "44": {
+        "mesioDistal": 7.0,
+        "buccoLingual": 7.5,
+        "crownHeight": 8.5,
+        "rootHeight": 14.0
+    },
+    "34": {
+        "mesioDistal": 7.0,
+        "buccoLingual": 7.5,
+        "crownHeight": 8.5,
+        "rootHeight": 14.0
+    },
+    "45": {
+        "mesioDistal": 7.0,
+        "buccoLingual": 8.0,
+        "crownHeight": 8.0,
+        "rootHeight": 14.5
+    },
+    "35": {
+        "mesioDistal": 7.0,
+        "buccoLingual": 8.0,
+        "crownHeight": 8.0,
+        "rootHeight": 14.5
+    },
+    "46": {
+        "mesioDistal": 11.0,
+        "buccoLingual": 10.5,
+        "crownHeight": 7.5,
+        "rootHeight": 14.0
+    },
+    "36": {
+        "mesioDistal": 11.0,
+        "buccoLingual": 10.5,
+        "crownHeight": 7.5,
+        "rootHeight": 14.0
+    },
+    "47": {
+        "mesioDistal": 10.5,
+        "buccoLingual": 10.0,
+        "crownHeight": 7.0,
+        "rootHeight": 13.0
+    },
+    "37": {
+        "mesioDistal": 10.5,
+        "buccoLingual": 10.0,
+        "crownHeight": 7.0,
+        "rootHeight": 13.0
+    },
+    "48": {
+        "mesioDistal": 10.0,
+        "buccoLingual": 9.5,
+        "crownHeight": 7.0,
+        "rootHeight": 11.0
+    },
+    "38": {
+        "mesioDistal": 10.0,
+        "buccoLingual": 9.5,
+        "crownHeight": 7.0,
+        "rootHeight": 11.0
+    }
+}

@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8"/>
+		<title>Testing periodontal chart</title>
+		<script src="jspdf.umd.min.js" type="application/javascript"></script>
+		<script src="main.mjs" type="module"></script>
+		<link rel="stylesheet" href="main.css"/>
+		<link rel="stylesheet" href="periodontal_charts.css"/>
+		<link rel="stylesheet" href="chart_graph.css"/>
+		<link rel="stylesheet" href="chart_export_dialog.css"/>
+		<link rel="stylesheet" href="sui/dialog.css"/>
+	</head>
+	<body>
+		<header>
+			<h1>Periodontal Chart</h1>
+			<div id="toolbox">
+				<span id="upload"   class="hover-button radiant" data-tooltip="Import"          style="--background-image:url('assets/import.png');     --radiant-color: black;"></span>
+				<span id="download" class="hover-button radiant" data-tooltip="Download"        style="--background-image:url('assets/download.png');   --radiant-color: black;"></span>
+				<span id="export"   class="hover-button radiant" data-tooltip="Export"          style="--background-image:url('assets/export.png');     --radiant-color: black;"></span>
+			</div>
+		</header>
+		<main>
+			<noscript>This site does not work without javascript :/</noscript>
+
+			<div class="section line_wrap_form">
+				<p class="title">Patient</p>
+				<label for="patient-lastname">Lastname</label>
+				<input id="patient-lastname" autocomplete="off" placeholder="Doe"/>
+				<label for="patient-firstname">Firstname</label>
+				<input id="patient-firstname" autocomplete="off" placeholder="John"/>
+			</div>
+			<div class="section line_wrap_form">
+				<p class="title">Practitioner</p>
+				<label for="practitioner">Full Name</label>
+				<input id="practitioner" autocomplete="off" placeholder="dr ..."/>
+			</div>
+			<div class="section">
+				<label for="chart-date" class="wrapping">Exam date</label>
+				<input id="chart-date" type="date" autocomplete="off"/>
+				<br/>
+
+				<span class="wrapping">Follow</span>
+				<input id="chart-follow_type-first" name="follow_type" autocomplete="off" type="radio" value="initial" checked/>
+				<label for="chart-follow_type-first">Initial Exam</label>
+				<input id="chart-follow_type-reevaluation" name="follow_type" autocomplete="off" type="radio" value="reevaluation"/>
+				<label for="chart-follow_type-reevaluation">Reevaluation</label>
+			</div>
+
+			<div id="periodontal-chart_container">
+				<div id="periodontal-chart_upper-buccal" class="periodontal-chart_tables">
+					<table id="periodontal-chart_upper-buccal-right"></table>
+					<table id="periodontal-chart_upper-buccal-left"></table>
+				</div>
+				<div class="periodontal-chart_canvas-container">
+					<p>Buccal</p>
+					<p>Palatal</p>
+					<div class="graph-container">
+						<canvas id="periodontal-chart_upper-graph"></canvas>
+						<div class="loader"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+					</div>
+				</div>
+				<div id="periodontal-chart_upper-lingual" class="periodontal-chart_tables">
+					<table id="periodontal-chart_upper-lingual-right"></table>
+					<table id="periodontal-chart_upper-lingual-left"></table>
+				</div>
+
+				<div id="periodontal-chart_lower-lingual" class="periodontal-chart_tables">
+					<table id="periodontal-chart_lower-lingual-right"></table>
+					<table id="periodontal-chart_lower-lingual-left"></table>
+				</div>
+				<div class="periodontal-chart_canvas-container">
+					<p>Lingual</p>
+					<p>Buccal</p>
+					<div class="graph-container">
+						<canvas id="periodontal-chart_lower-graph"></canvas>
+						<div class="loader"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+					</div>
+				</div>
+				<div id="periodontal-chart_lower-buccal" class="periodontal-chart_tables">
+					<table id="periodontal-chart_lower-buccal-right"></table>
+					<table id="periodontal-chart_lower-buccal-left"></table>
+				</div>
+			</div>
+		</main>
+	</body>
+</html>

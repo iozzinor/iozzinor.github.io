@@ -1,0 +1,59 @@
+.export-grid
+{
+	display: grid;
+	margin-left: auto;
+	margin-right: auto;
+	min-width: 50%;
+	max-width: 80%;
+	gap: 0.5rem;
+}
+
+.image-button
+{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	column-gap: 0.5rem;
+	padding: 0.5rem;
+	border-radius: 1rem;
+	border: 4px solid var(--button-color);
+}
+
+.image-button:hover
+{
+	color: white;
+	background-color: var(--button-color);
+}
+
+.image-button .image
+{
+	background-image: var(--background-image);
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: contain;
+	width: 6rem;
+	height: 6rem;
+}
+
+.image-button:hover .image
+{
+	background-image: var(--background-image-hover);
+}
+
+.export-grid .copy
+{
+	grid-column-start: 1;
+	grid-column-end: 3;
+}
+
+.export-grid .pdf
+{
+	grid-row-start: 2;
+	grid-column-start: 1;
+}
+
+.export-grid .csv
+{
+	grid-row-start: 2;
+	grid-column-start: 2;
+}

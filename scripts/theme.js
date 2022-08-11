@@ -8,7 +8,7 @@
 		{
 			let themeLink = document.createElement('link');
 			themeLink.rel = 'stylesheet';
-			themeLink.href = '/Styles/themes/' + (theme === null ? 'system-default' : theme) + '.css';
+			themeLink.href = '/styles/themes/' + (theme === null ? 'system-default' : theme) + '.css';
 			document.head.appendChild(themeLink);
 		}
 

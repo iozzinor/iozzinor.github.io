@@ -1,0 +1,98 @@
+.graph-container
+{
+	position: relative;
+}
+
+.graph-container canvas
+{
+	position: absolute;
+}
+
+.graph-container canvas.loading + .loader
+{
+	visibility: visible;
+}
+
+.graph-container .loader
+{
+	visibility: hidden;
+	z-index: 1;
+	position: absolute;
+	width: 80px;
+	height: 80px;
+	top: 50%;
+	left: 50%;
+	transform: translateX(-50%) translateY(-50%);
+}
+
+.graph-container .loader div
+{
+	position: absolute;
+	background-color: black;
+	border-radius: 50%;
+	width: 16px;
+	height: 16px;
+	animation: square_loader 1.2s linear infinite;
+}
+
+.graph-container .loader div:nth-child(2)
+{
+	left: 32px;
+	animation-delay: 0.4s;
+}
+
+.graph-container .loader div:nth-child(3)
+{
+	left: 64px;
+	animation-delay: 1.2s;
+}
+
+.graph-container .loader div:nth-child(4)
+{
+	top: 32px;
+	animation-delay: -0.4s;
+}
+
+.graph-container .loader div:nth-child(5)
+{
+	left: 32px;
+	top: 32px;
+	animation-delay: 0.4s;
+}
+
+.graph-container .loader div:nth-child(6)
+{
+	left: 64px;
+	top: 32px;
+	animation-delay: 0.6s;
+}
+
+.graph-container .loader div:nth-child(7)
+{
+	top: 64px;
+	animation-delay: -0.8s;
+}
+
+.graph-container .loader div:nth-child(8)
+{
+	left: 32px;
+	top: 64px;
+	animation-delay: -1.2s;
+}
+
+.graph-container .loader div:nth-child(9)
+{
+	left: 64px;
+	top: 64px;
+	animation-delay: -1.6s;
+}
+
+@keyframes square_loader {
+	0%, 100% {
+		opacity: 1;
+	}
+
+	50% {
+		opacity: 0.5;
+	}
+}
