@@ -92,6 +92,13 @@ export class ChartForm {
 		chartForm_restoreChart(this, chart);
 	}
 
+	retrievePatient() {
+		return {
+			firstName: this._elements.patient.firstName.value,
+			lastName: this._elements.patient.lastName.value,
+		};
+	}
+
 	retrieveChart() {
 		let gingivalMargins   = this._elements.inputs.gingivalMargins.map(input => parseInt(input.value));
 		let probingDepths     = this._elements.inputs.probingDepths.map(input => parseInt(input.value));
@@ -100,10 +107,7 @@ export class ChartForm {
 		let missingTeeth      = convertBooleanArrayToBinaryString(this._elements.toothNumbers.map(toothNumberCell => toothNumberCell.classList.contains('missing')));
 
 		return {
-			patient: {
-				firstName: this._elements.patient.firstName.value,
-				lastName: this._elements.patient.lastName.value,
-			},
+			patient: this.retrievePatient(),
 			date: this._elements.date.value,
 			practitioner: this._elements.practitioner.value,
 			followType: this._elements.followTypes.find(radioButton => radioButton.checked).value,

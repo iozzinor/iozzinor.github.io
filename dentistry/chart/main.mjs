@@ -16,6 +16,7 @@ function main() {
 	restoreSettings(chartForm, settings);
 	setupToolboxClickListeners(chartForm, chartUrlHandler, settings);
 	attemptToExtractChartFromUrl(chartForm, chartUrlHandler);
+	setupPatientNameInputListeners(chartForm);
 }
 
 function loadSettings() {
@@ -44,6 +45,16 @@ function attemptToExtractChartFromUrl(chartForm, chartUrlHandler) {
 		restoreChartFromJson(chartForm, extractedChart);
 }
 
+function setupPatientNameInputListeners(chartForm) {
+	const updateTitle = () => {
+		refreshTitle(chartForm.retrievePatient());
+	};
+	let patientFirstNameInput = document.getElementById('patient-firstname');
+	let patientLastNameInput = document.getElementById('patient-lastname');
+	patientFirstNameInput.addEventListener('input', updateTitle);
+	patientLastNameInput.addEventListener('input', updateTitle);
+}
+
 function onUploadFileChosen(chartForm, file) {
 	let reader = new FileReader();
 	reader.readAsText(file);
@@ -55,6 +66,8 @@ function onUploadFileChosen(chartForm, file) {
 
 function restoreChartFromJson(chartForm, json) {
 	chartForm.restoreChart(json);
+	if ('patient' in json)
+		refreshTitle(json.patient);
 }
 
 function onUploadClick(chartForm) {
@@ -82,6 +95,21 @@ function onSettingsClick(chartForm, settings) {
 			chartForm.lowerGraph().render();
 		});
 	onSettingsClick.dialog.show(settings.toObject());
+}
+
+function refreshTitle(patient) {
+	refreshTitle.h1 = refreshTitle.h1 === undefined ? document.querySelector('h1') : refreshTitle.h1;
+	let newTitle = makeDocumentTitle(patient);
+	refreshTitle.h1.textContent = newTitle;
+	document.title = newTitle;
+}
+
+function makeDocumentTitle(patient) {
+	let components = [patient.lastName, patient.firstName].filter(component => component.length > 0);
+	if (components.length < 1)
+		return 'Periodontal Chart';
+	let patientFullName = components.join(' ');
+	return `Periodontal Chart | ${patientFullName}`;
 }
 
 main();
