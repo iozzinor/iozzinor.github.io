@@ -6,23 +6,30 @@ export class SettingsDialog {
 		this._onApply = onApply;
 
 		let graphScaleFactorRange = Element.create('input').type('range').max('1.0').min('0.3').step('0.01').build();
-		let graphScaleFactorParagraph = Element.create('p').build();
+		let graphScaleFactorSpan = Element.create('span').className('graph-scale-factor_value').build();
+		let graphScaleFactorParagraph = Element.create('p').add([
+			Element.text('Jaw graphs will be scaled by: '),
+			graphScaleFactorSpan,
+			Element.text('.'),
+		]).build();
 		this._elements = {
 			graphScaleFactor: {
 				range: graphScaleFactorRange,
+				span: graphScaleFactorSpan,
 				paragraph: graphScaleFactorParagraph,
+				factorSpan: graphScaleFactorSpan
 			}
 		};
 
 		graphScaleFactorRange.addEventListener('input', function(event) {
-			graphScaleFactorParagraph.textContent = generateGraphScaleFactorTextContent(event.target.value);
+			graphScaleFactorSpan.textContent = event.target.value;
 		});
 	}
 
 	show(settings) {
 		let graphScaleFactor = settings['graphScaleFactor'];
 		this._elements.graphScaleFactor.range.value = graphScaleFactor;
-		this._elements.graphScaleFactor.paragraph.textContent = generateGraphScaleFactorTextContent(graphScaleFactor);
+		this._elements.graphScaleFactor.span.textContent = graphScaleFactor;
 
 		Dialog
 			.box('Settings')
@@ -37,10 +44,6 @@ export class SettingsDialog {
 			.button(Dialog.button('Apply').onClick(settingsDialog_onApply.bind(null, this)))
 			.show();
 	}
-}
-
-function generateGraphScaleFactorTextContent(scaleFactor) {
-	return `Jaw graphs will be scaled by: ${scaleFactor}.`;
 }
 
 function settingsDialog_onApply(settingsDialog) {
