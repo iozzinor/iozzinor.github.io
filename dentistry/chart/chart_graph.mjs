@@ -41,9 +41,11 @@ export class ChartGraph {
 		}, {});
 
 		this._canvas = canvas;
+		this._computePreferredWidth = computePreferredWidth;
+		this._cache = {};
+
 		graphs.push(this);
 		this.setLoading(true);
-		this._computePreferredWidth = computePreferredWidth;
 	}
 
 	hasTooth(toothNumber) {
@@ -87,14 +89,15 @@ export class ChartGraph {
 	}
 
 	resize() {
-		let newWidth = chartGraph_computeWidth(this);
-		chartGraph_resizeHeight(this, newWidth);
+		chartGraph_cacheTeethGeometry(this);
+		chartGraph_computeNewSize(this);
+		chartGraph_cacheRenderPositions(this);
 		this.setLoading(false);
 		this.render();
 	}
 
 	render() {
-		if (!('_geometry' in this))
+		if (!('geometry' in this._cache))
 			return;
 		chartGraph_render(this);
 	}
@@ -111,6 +114,11 @@ export class ChartGraph {
 	}
 }
 
+function chartGraph_computeNewSize(graph) {
+	let newWidth = chartGraph_computeWidth(graph);
+	chartGraph_resizeHeight(graph, newWidth);
+}
+
 function chartGraph_computeWidth(graph) {
 	let preferredWidth = graph._computePreferredWidth();
 	chartGraph_setWidthPixels(graph, preferredWidth);
@@ -124,7 +132,6 @@ function chartGraph_setWidthPixels(graph, widthPixels) {
 }
 
 function chartGraph_resizeHeight(graph, newWidth) {
-	chartGraph_computeTeethGeometry(graph);
 	let newHeight = chartGraph_computeHeight(graph, newWidth);
 	chartGraph_setHeightPixels(graph, newHeight);
 }
@@ -135,16 +142,20 @@ function chartGraph_setHeightPixels(graph, heightPixels) {
 	graph._canvas.height = heightPixels;
 }
 
-function chartGraph_computeTeethGeometry(graph) {
-	if ('_geometry' in graph)
+function chartGraph_cacheTeethGeometry(graph) {
+	if ('geometry' in graph._cache)
 		return;
+	graph._cache.geometry = chartGraph_computeTeethGeometry(graph);
+}
+
+function chartGraph_computeTeethGeometry(graph) {
 	let totalWidth = graph._teeth.reduce((total, current) => total + teethDimensions[current].mesioDistal, 0);
 	let rootHeights = graph._teeth.map(toothNumber => teethDimensions[toothNumber].rootHeight);
 	let crownHeights = graph._teeth.map(toothNumber => teethDimensions[toothNumber].crownHeight);
 	let maxRootHeight = rootHeights.reduce((currentMax, currentRootHeight) => Math.max(currentMax, currentRootHeight), -Infinity);
 	let maxCrownHeight = crownHeights.reduce((currentMax, currentCrownHeight) => Math.max(currentMax, currentCrownHeight), -Infinity);
 	let maxTotalHeight = maxRootHeight + maxCrownHeight;
-	graph._geometry = {
+	return {
 		totalWidth: totalWidth,
 		maxRootHeight: maxRootHeight,
 		maxCrownHeight: maxCrownHeight,
@@ -153,20 +164,19 @@ function chartGraph_computeTeethGeometry(graph) {
 }
 
 function chartGraph_computeHeight(graph, newWidth) {
-	let normalizeHeight = graph._geometry.maxTotalHeight;
-	let heightPixels = 2 * normalizeHeight * newWidth / graph._geometry.totalWidth;
+	let normalizeHeight = graph._cache.geometry.maxTotalHeight;
+	let heightPixels = 2 * normalizeHeight * newWidth / graph._cache.geometry.totalWidth;
 	return parseInt(heightPixels) + BUCCO_LINGUAL_GAP_PIXELS;
 }
 
 function chartGraph_render(graph) {
 	let context = graph._canvas.getContext('2d');
-	let positions = chartGraph_computeRenderPositions(graph);
-	let teethBoxes = getTeethRenderBoxes(graph, graph._canvas.width, positions);
+	let positions = graph._cache.positions;
 
 	chartGraph_clear(graph, context);
-	chartGraph_renderTeeth(graph, context, positions, teethBoxes);
+	chartGraph_renderTeeth(graph, context, positions);
 	chartGraph_renderRootGraduation(graph, context, positions);
-	chartGraph_renderPockets(graph, context, positions, teethBoxes);
+	chartGraph_renderPockets(graph, context, positions);
 }
 
 function chartGraph_clear(graph, context) {
@@ -175,24 +185,32 @@ function chartGraph_clear(graph, context) {
 	context.clearRect(0, 0, width, height);
 }
 
+function chartGraph_cacheRenderPositions(graph) {
+	graph._cache.positions = chartGraph_computeRenderPositions(graph);
+}
+
 function chartGraph_computeRenderPositions(graph) {
-	let unitRatio      = getUnitRatio(graph);
-	let maxToothHeight = graph._geometry.maxTotalHeight * unitRatio;
-	let maxRootHeight  = graph._geometry.maxRootHeight * unitRatio;
-	let maxCrownHeight = graph._geometry.maxCrownHeight * unitRatio;
+	let unitRatio        = getUnitRatio(graph);
+	let maxToothHeight   = graph._cache.geometry.maxTotalHeight * unitRatio;
+	let maxRootHeight    = graph._cache.geometry.maxRootHeight * unitRatio;
+	let maxCrownHeight   = graph._cache.geometry.maxCrownHeight * unitRatio;
+	let topCrownAlign    = maxRootHeight;
 	let bottomCrownAlign = getBottomCrownAlign(graph, maxToothHeight, maxCrownHeight);
+	let teethBoxes       = getTeethRenderBoxes(graph, graph._canvas.width, unitRatio, topCrownAlign, bottomCrownAlign);
+
 	return {
 		unitRatio: unitRatio,
 		maxToothHeight: maxToothHeight,
 		maxCrownHeight: maxCrownHeight,
 		maxRootHeight: maxRootHeight,
-		topCrownAlign: maxRootHeight,
+		topCrownAlign: topCrownAlign,
 		bottomCrownAlign: bottomCrownAlign,
+		teethBoxes: teethBoxes,
 	};
 }
 
-function chartGraph_renderTeeth(graph, context, positions, teethBoxes) {
-	for (const [index, box] of Object.entries(teethBoxes))
+function chartGraph_renderTeeth(graph, context, positions) {
+	for (const [index, box] of Object.entries(positions.teethBoxes))
 	{
 		let toothIndex = index % graph._teeth.length;
 		let toothNumber = graph._teeth[toothIndex];
@@ -211,24 +229,24 @@ function chartGraph_renderTeeth(graph, context, positions, teethBoxes) {
 }
 
 function getUnitRatio(graph) {
-	return graph._canvas.width / graph._geometry.totalWidth;
+	return graph._canvas.width / graph._cache.geometry.totalWidth;
 }
 
 function getBottomCrownAlign(graph, maxToothHeight, maxCrownHeight) {
 	return maxToothHeight + BUCCO_LINGUAL_GAP_PIXELS + maxCrownHeight;
 }
 
-function getTeethRenderBoxes(graph, canvasWidth, positions) {
+function getTeethRenderBoxes(graph, canvasWidth, unitRatio, topCrownAlign, bottomCrownAlign) {
 	let accumulatedSizes = [];
 	let accumulatedX = 0;
 	for (let tooth of graph._teeth) {
 		let toothDimension = teethDimensions[tooth];
-		let toothWidth = toothDimension.mesioDistal * positions.unitRatio;
+		let toothWidth = toothDimension.mesioDistal * unitRatio;
 		accumulatedSizes.push({
 			x: accumulatedX,
-			rootHeight:     toothDimension.rootHeight * positions.unitRatio,
-			crownHeight:    toothDimension.crownHeight * positions.unitRatio,
-			totalHeight:    toothDimension.totalHeight * positions.unitRatio,
+			rootHeight:     toothDimension.rootHeight * unitRatio,
+			crownHeight:    toothDimension.crownHeight * unitRatio,
+			totalHeight:    toothDimension.totalHeight * unitRatio,
 			width: toothWidth,
 		});
 		accumulatedX += toothWidth;
@@ -237,7 +255,7 @@ function getTeethRenderBoxes(graph, canvasWidth, positions) {
 	let firstRowBoxes = accumulatedSizes.map(size => {
 		return {
 			x: size.x,
-			y: positions.topCrownAlign - size.rootHeight,
+			y: topCrownAlign - size.rootHeight,
 			width: size.width,
 			height: size.totalHeight,
 		};
@@ -245,7 +263,7 @@ function getTeethRenderBoxes(graph, canvasWidth, positions) {
 	let secondRowBoxes = accumulatedSizes.map(size => {
 		return {
 			x: size.x,
-			y: positions.bottomCrownAlign - size.crownHeight,
+			y: bottomCrownAlign - size.crownHeight,
 			width: size.width,
 			height: size.totalHeight,
 		};
@@ -255,47 +273,70 @@ function getTeethRenderBoxes(graph, canvasWidth, positions) {
 
 function chartGraph_renderRootGraduation(graph, context, positions) {
 	const isLineToMark = line => line.depth > 0 && line.depth % 5 == 0;
+	const partitionRootGraduationLines = (lines, filter) => {
+		return lines.reduce((acc, line) => {
+			let target = filter(line) ? acc[0] : acc[1];
+			target.push(line);
+			return acc;
+		}, [[], []]);
+	};
 
-	context.beginPath();
-	context.strokeStyle = 'lightgray';
-	context.lineWidth = 1;
 	let lines = chartGraph_getRootGraduationLines(graph, positions);
-	for (let line of lines.filter(line => !isLineToMark(line))) {
-		context.moveTo(line.start.x, line.start.y);
-		context.lineTo(line.end.x, line.end.y);
-	}
-	context.stroke();
-
-	context.beginPath();
-	context.strokeStyle = 'black';
-	context.lineWidth = 1;
-	for (let line of lines.filter(isLineToMark)) {
-		context.moveTo(line.start.x, line.start.y);
-		context.lineTo(line.end.x, line.end.y);
-	}
-	context.stroke();
+	const [linesToMark, linesNotToMark] = partitionRootGraduationLines(lines, isLineToMark);
+	chartGraph_renderRootGraduationsNotToMark(graph, context, lines.filter(line => !isLineToMark(line)));
+	chartGraph_renderRootGraduationsToMark(graph, context, lines.filter(isLineToMark));
 }
 
 function chartGraph_getRootGraduationLines(graph, positions) {
 	let lines = [];
-	let maxRootHeight = graph._geometry.maxRootHeight;
-
+	const canvasWidth = graph._canvas.width;
+	const maxRootHeight = graph._cache.geometry.maxRootHeight;
+	const makeGraduationLineAtOrdinate = (canvasWidth, y, depth) => {
+		return { start: { x: 0, y: y }, end: { x: canvasWidth, y: y }, depth: depth };
+	};
 	for (var rootGraduationMillimeter = 0; rootGraduationMillimeter < maxRootHeight + 1; ++rootGraduationMillimeter) {
 		let depth = maxRootHeight - rootGraduationMillimeter;
-		let y = rootGraduationMillimeter * positions.maxRootHeight / maxRootHeight;
-		lines.push({ start: { x: 0, y: y }, end: { x: graph._canvas.width, y: y }, depth: depth });
+		let y = chartGraph_convertMillimeterOrdinate(graph, positions, true, depth);
+		lines.push(makeGraduationLineAtOrdinate(canvasWidth, y, depth));
 	}
-
-	for (var rootGraduationMillimeter = 0; rootGraduationMillimeter < maxRootHeight + 1; ++rootGraduationMillimeter) {
-		let y = rootGraduationMillimeter * positions.maxRootHeight / maxRootHeight + positions.bottomCrownAlign;
-		lines.push({ start: { x: 0, y: y }, end: { x: graph._canvas.width, y: y }, depth: rootGraduationMillimeter });
+	for (var depth = 0; depth < maxRootHeight + 1; ++depth) {
+		let y = chartGraph_convertMillimeterOrdinate(graph, positions, false, depth);
+		lines.push(makeGraduationLineAtOrdinate(canvasWidth, y, depth));
 	}
 	return lines;
 }
 
-function chartGraph_renderPockets(graph, context, positions, teethBoxes) {
+function chartGraph_renderRootGraduationsNotToMark(graph, context, lines) {
+	renderLines(context, lines, {
+		stroke: 'lightgray',
+		lineWidth: 1,
+	});
+}
+
+function chartGraph_renderRootGraduationsToMark(graph, context, lines) {
+	renderLines(context, lines, {
+		stroke: 'black',
+		lineWidth: 1,
+	});
+}
+
+function renderLines(context, lines, style) {
+	context.strokeStyle = style.stroke;
+	context.lineWidth = style.lineWidth;
+	context.beginPath();
+	for (let line of lines)
+		renderLine(context, line);
+	context.stroke();
+}
+
+function renderLine(context, line) {
+	context.moveTo(line.start.x, line.start.y);
+	context.lineTo(line.end.x, line.end.y);
+}
+
+function chartGraph_renderPockets(graph, context, positions) {
 	let teethGroups = chartGraph_getTeethGroups(graph);
-	let pockets = chartGraph_computePockets(graph, positions, teethGroups, teethBoxes);
+	let pockets = chartGraph_computePockets(graph, positions, teethGroups);
 	for (let pocket of pockets)
 		chartGraph_renderPocket(graph, context, pocket);
 }
@@ -316,13 +357,13 @@ function chartGraph_getTeethGroups(graph) {
 	return groups;
 }
 
-function chartGraph_computePockets(graph, positions, teethGroups, teethBoxes) {
+function chartGraph_computePockets(graph, positions, teethGroups) {
 	let result = [];
 	for (let group of teethGroups) {
 		let buccalGroup = [];
 		let lingualGroup = [];
 		for (let tooth of group) {
-			let abscissas = chartGraph_getChartSitesAbscissas(graph, tooth, teethBoxes);
+			let abscissas = chartGraph_getChartSitesAbscissas(graph, tooth, positions.teethBoxes);
 			let newBuccalPocketPoints = chartGraph_getBucalPocketPoints(graph, positions, tooth, abscissas);
 			buccalGroup.push(...newBuccalPocketPoints);
 			let newLingualPocketPoints = chartGraph_getLingualPocketPoints(graph, positions, tooth, abscissas);
@@ -382,9 +423,9 @@ function chartGraph_convertChartSiteToPocketPoint(graph, positions, isTopRow, ch
 
 function chartGraph_convertMillimeterOrdinate(graph, positions, isTopRow, yMillimeter) {
 	if (isTopRow)
-		return positions.maxRootHeight * (graph._geometry.maxRootHeight - yMillimeter) / graph._geometry.maxRootHeight;
+		return positions.maxRootHeight * (graph._cache.geometry.maxRootHeight - yMillimeter) / graph._cache.geometry.maxRootHeight;
 	else
-		return positions.bottomCrownAlign + positions.maxRootHeight * (yMillimeter / graph._geometry.maxRootHeight);
+		return positions.bottomCrownAlign + positions.maxRootHeight * (yMillimeter / graph._cache.geometry.maxRootHeight);
 }
 
 function chartGraph_renderPocket(graph, context, pocketPoints) {
