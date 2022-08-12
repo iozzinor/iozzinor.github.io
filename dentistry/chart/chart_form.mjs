@@ -89,7 +89,7 @@ export class ChartForm {
 			let startX = firstToothNumberCell.getBoundingClientRect().x;
 			let endX = upperLeftBuccalTable.getBoundingClientRect().x + upperLeftBuccalTable.getBoundingClientRect().width;
 			let newWidth = endX - startX;
-			return newWidth;
+			return newWidth * 0.8;
 		});
 		this._lowerGraph = new ChartGraph(lowerCanvas, JAW.LOWER, () => {
 			let firstToothNumberCell = lowerRightBuccalTable.querySelector('.tooth_number');
