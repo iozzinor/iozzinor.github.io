@@ -22,7 +22,7 @@ export class ChartExportDialog {
 
 		Dialog
 			.box('Export Chart')
-			.message('Please find bellow the URL to reload this chart:')
+			.message('Please find below the URL to reload this chart:')
 			.content(Element.create('div').add([
 				Element.create('p').text(chartUrl).overflowX('scroll'),
 				buttonsGrid,

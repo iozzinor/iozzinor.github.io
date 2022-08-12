@@ -16,7 +16,7 @@ export class ChartDownloadDialog {
 		});
 		Dialog
 			.box('Chart Download')
-			.message('Please click the button bellow to download the chart!')
+			.message('Please click the button below to download the chart!')
 			.content(Element.create('div').add([
 				clickMeButton,
 			]))

@@ -1,0 +1,29 @@
+.file-opener_container
+{
+    padding: 1rem;
+}
+
+.file-opener_drop-target
+{
+    position: relative;
+    border: 1px dashed lightgray;
+    min-width: 30vw;
+    min-height: 30vh;
+    border-radius: 1rem;
+    margin-top: 3rem;
+}
+
+.file-opener_drop-target p
+{
+    position: absolute;
+    font-size: 1.5rem;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.file-opener_drop-target.dragged-over
+{
+    border-width 4px;
+    border-color: blue;
+}
