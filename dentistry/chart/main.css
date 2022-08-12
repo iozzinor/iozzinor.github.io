@@ -6,6 +6,7 @@
 
 	--main-width: 85vw;
 	--button-color: black;
+	--section-shadow-color: rgba(0, 0, 0, 0.5);
 }
 
 main
@@ -75,16 +76,24 @@ h1
 	opacity: 1;
 }
 
+.section:first-of-type
+{
+	margin-top: 3rem;
+}
+
 .section
 {
-	border: 1px solid black;
-	border-radius: 0.5rem;
-	padding: 0.5rem;
-	margin-bottom: 0.5rem;
+	position: relative;
+	border-radius: 1rem;
+	padding: 1rem;
+	margin-bottom: 2.5rem;
+	box-shadow: 0px 0px 4px var(--section-shadow-color);
 }
 
 .section .title
 {
+	position: absolute;
+	top: -1.5rem;
 	color: gray;
 	margin: 0;
 }
