@@ -4,6 +4,7 @@
  * @module dialog
  */
 import * as Element from './elements.mjs';
+import * as Scroll from './scroll.mjs';
 
 /**
  * A dialog box builder.
@@ -114,6 +115,7 @@ class _DialogBuilder
 		document.body.appendChild(this._container);
 		this._container.style.zIndex = this._id + 999;
 		dialogVeil.style.display = '';
+        Scroll.blockScrollOnBody();
 		return this._id;
 	}
 }
@@ -256,7 +258,10 @@ export function close(id) {
 	let toClose = boxes.splice(toCloseIndex, 1)[0];
 	toClose._container.remove();
 	if (boxes.length == 0)
+    {
 		dialogVeil.style.display = 'none';
+        Scroll.unblockScrollOnBody();
+    }
 }
 
 function setupEscapeCloseListener() {
