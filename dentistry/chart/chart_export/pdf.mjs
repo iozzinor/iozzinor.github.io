@@ -61,7 +61,7 @@ function drawJaw(
 	createLabels(pdf, jawLabel, firstJawOrientationLabel, secondJawOrientationLabel);
 
 	let imageHeight = parseInt(IMAGE_WIDTH * imageSize.height / imageSize.width);
-	pdf.addImage(image, 'PNG', (PAGE_WIDTH - IMAGE_WIDTH) / 2, 135, IMAGE_WIDTH, imageHeight);
+	pdf.addImage(image, 'PNG', (PAGE_WIDTH - IMAGE_WIDTH) / 2, 130, IMAGE_WIDTH, imageHeight);
 
 	let headersConfig = createHeadersConfig(makeTeethIterator);
 	createFirstTable(pdf, chart, headersConfig, tableStyles, firstToothSiteOffset, makeTeethIterator);

@@ -8,6 +8,7 @@ Object.defineProperty(JAW, 'LOWER', { value: 2, writable: false });
 Object.freeze(JAW);
 
 const BUCCO_LINGUAL_GAP_PIXELS = 20;
+const EXTENDED_ROOT_GRADUATION_HEIGHT_MILLIMETERS = 3;
 
 export class ChartGraph {
 	constructor(canvas, jaw, computePreferredWidth) {
@@ -164,8 +165,9 @@ function chartGraph_computeTeethGeometry(graph) {
 }
 
 function chartGraph_computeHeight(graph, newWidth) {
-	let normalizeHeight = graph._cache.geometry.maxToothHeight;
-	let heightPixels = 2 * normalizeHeight * newWidth / graph._cache.geometry.totalWidth;
+	let normalizedHeightSingleRow = graph._cache.geometry.maxToothHeight;
+	let normalizedHeight = 2 * (normalizedHeightSingleRow + EXTENDED_ROOT_GRADUATION_HEIGHT_MILLIMETERS);
+	let heightPixels = normalizedHeight * newWidth / graph._cache.geometry.totalWidth;
 	return parseInt(heightPixels) + BUCCO_LINGUAL_GAP_PIXELS;
 }
 
@@ -194,8 +196,8 @@ function chartGraph_computeRenderPositions(graph) {
 	let maxToothHeight   = graph._cache.geometry.maxToothHeight * unitRatio;
 	let maxRootHeight    = graph._cache.geometry.maxRootHeight * unitRatio;
 	let maxCrownHeight   = graph._cache.geometry.maxCrownHeight * unitRatio;
-	let topCrownAlign    = maxRootHeight;
-	let bottomCrownAlign = getBottomCrownAlign(graph, maxToothHeight, maxCrownHeight);
+	let topCrownAlign    = maxRootHeight + EXTENDED_ROOT_GRADUATION_HEIGHT_MILLIMETERS * unitRatio;
+	let bottomCrownAlign = getBottomCrownAlign(graph, maxToothHeight, maxCrownHeight, unitRatio);
 	let teethBoxes       = getTeethRenderBoxes(graph, graph._canvas.width, unitRatio, topCrownAlign, bottomCrownAlign);
 
 	return {
@@ -232,8 +234,8 @@ function getUnitRatio(graph) {
 	return graph._canvas.width / graph._cache.geometry.totalWidth;
 }
 
-function getBottomCrownAlign(graph, maxToothHeight, maxCrownHeight) {
-	return maxToothHeight + BUCCO_LINGUAL_GAP_PIXELS + maxCrownHeight;
+function getBottomCrownAlign(graph, maxToothHeight, maxCrownHeight, unitRatio) {
+	return maxToothHeight + BUCCO_LINGUAL_GAP_PIXELS + maxCrownHeight + EXTENDED_ROOT_GRADUATION_HEIGHT_MILLIMETERS * unitRatio;
 }
 
 function getTeethRenderBoxes(graph, canvasWidth, unitRatio, topCrownAlign, bottomCrownAlign) {
@@ -290,16 +292,16 @@ function chartGraph_renderRootGraduation(graph, context, positions) {
 function chartGraph_getRootGraduationLines(graph, positions) {
 	let lines = [];
 	const canvasWidth = graph._canvas.width;
-	const maxRootHeight = graph._cache.geometry.maxRootHeight;
+	const maxGraduationMillimeters = graph._cache.geometry.maxRootHeight + EXTENDED_ROOT_GRADUATION_HEIGHT_MILLIMETERS;
 	const makeGraduationLineAtOrdinate = (canvasWidth, y, depth) => {
 		return { start: { x: 0, y: y }, end: { x: canvasWidth, y: y }, depth: depth };
 	};
-	for (var rootGraduationMillimeter = 0; rootGraduationMillimeter < maxRootHeight + 1; ++rootGraduationMillimeter) {
-		let depth = maxRootHeight - rootGraduationMillimeter;
+	for (var rootGraduationMillimeter = 0; rootGraduationMillimeter < maxGraduationMillimeters + 1; ++rootGraduationMillimeter) {
+		let depth = maxGraduationMillimeters - rootGraduationMillimeter;
 		let y = chartGraph_convertMillimeterOrdinate(graph, positions, true, depth);
 		lines.push(makeGraduationLineAtOrdinate(canvasWidth, y, depth));
 	}
-	for (var depth = 0; depth < maxRootHeight + 1; ++depth) {
+	for (var depth = 0; depth < maxGraduationMillimeters + EXTENDED_ROOT_GRADUATION_HEIGHT_MILLIMETERS + 1; ++depth) {
 		let y = chartGraph_convertMillimeterOrdinate(graph, positions, false, depth);
 		lines.push(makeGraduationLineAtOrdinate(canvasWidth, y, depth));
 	}
@@ -423,7 +425,7 @@ function chartGraph_convertChartSiteToPocketPoint(graph, positions, isTopRow, ch
 
 function chartGraph_convertMillimeterOrdinate(graph, positions, isTopRow, yMillimeter) {
 	if (isTopRow)
-		return positions.maxRootHeight * (graph._cache.geometry.maxRootHeight - yMillimeter) / graph._cache.geometry.maxRootHeight;
+		return positions.topCrownAlign - (positions.maxRootHeight * yMillimeter / graph._cache.geometry.maxRootHeight);
 	else
 		return positions.bottomCrownAlign + positions.maxRootHeight * (yMillimeter / graph._cache.geometry.maxRootHeight);
 }
