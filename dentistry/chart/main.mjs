@@ -17,6 +17,7 @@ function main() {
 	setupToolboxClickListeners(chartForm, chartUrlHandler, settings);
 	attemptToExtractChartFromUrl(chartForm, chartUrlHandler);
 	setupPatientNameInputListeners(chartForm);
+    setupBeforeUnloadListener();
 }
 
 function loadSettings() {
@@ -53,6 +54,14 @@ function setupPatientNameInputListeners(chartForm) {
 	let patientLastNameInput = document.getElementById('patient-lastname');
 	patientFirstNameInput.addEventListener('input', updateTitle);
 	patientLastNameInput.addEventListener('input', updateTitle);
+}
+
+function setupBeforeUnloadListener() {
+    window.addEventListener('beforeunload', function(event) {
+        event.preventDefault();
+        event.returnValue = 'Are your sure you want to quit?';
+        return event.returnValue;
+    });
 }
 
 function onUploadFileChosen(chartForm, file) {
