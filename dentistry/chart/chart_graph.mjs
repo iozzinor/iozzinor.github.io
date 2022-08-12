@@ -154,17 +154,17 @@ function chartGraph_computeTeethGeometry(graph) {
 	let crownHeights = graph._teeth.map(toothNumber => teethDimensions[toothNumber].crownHeight);
 	let maxRootHeight = rootHeights.reduce((currentMax, currentRootHeight) => Math.max(currentMax, currentRootHeight), -Infinity);
 	let maxCrownHeight = crownHeights.reduce((currentMax, currentCrownHeight) => Math.max(currentMax, currentCrownHeight), -Infinity);
-	let maxTotalHeight = maxRootHeight + maxCrownHeight;
+	let maxToothHeight = maxRootHeight + maxCrownHeight;
 	return {
 		totalWidth: totalWidth,
 		maxRootHeight: maxRootHeight,
 		maxCrownHeight: maxCrownHeight,
-		maxTotalHeight: maxTotalHeight,
+		maxToothHeight: maxToothHeight,
 	};
 }
 
 function chartGraph_computeHeight(graph, newWidth) {
-	let normalizeHeight = graph._cache.geometry.maxTotalHeight;
+	let normalizeHeight = graph._cache.geometry.maxToothHeight;
 	let heightPixels = 2 * normalizeHeight * newWidth / graph._cache.geometry.totalWidth;
 	return parseInt(heightPixels) + BUCCO_LINGUAL_GAP_PIXELS;
 }
@@ -191,7 +191,7 @@ function chartGraph_cacheRenderPositions(graph) {
 
 function chartGraph_computeRenderPositions(graph) {
 	let unitRatio        = getUnitRatio(graph);
-	let maxToothHeight   = graph._cache.geometry.maxTotalHeight * unitRatio;
+	let maxToothHeight   = graph._cache.geometry.maxToothHeight * unitRatio;
 	let maxRootHeight    = graph._cache.geometry.maxRootHeight * unitRatio;
 	let maxCrownHeight   = graph._cache.geometry.maxCrownHeight * unitRatio;
 	let topCrownAlign    = maxRootHeight;
