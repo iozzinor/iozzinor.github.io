@@ -1,0 +1,17 @@
+.graph-scale-factor
+{
+	display: flex;
+	flex-direction: column;
+	row-grap: 1rem;
+	align-items: center;
+}
+
+.graph-scale-factor input
+{
+	width: 100%;
+}
+
+.graph-scale-factor p
+{
+	margin: 0;
+}

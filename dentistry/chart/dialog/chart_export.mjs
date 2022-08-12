@@ -32,7 +32,7 @@ export class ChartExportDialog {
 }
 
 function createCopyButton(chartUrl) {
-	let copyButton = createImageButton('assets/url.png', 'assets/url-hover.png', 'Copy link', function(event) {
+	let copyButton = createImageButton('../assets/url.png', '../assets/url-hover.png', 'Copy link', function(event) {
 		navigator.clipboard.writeText(chartUrl);
 		let imageButton = event.target.closest('.image-button');
 		let span = imageButton.querySelector('span');
@@ -46,7 +46,7 @@ function createCopyButton(chartUrl) {
 }
 
 function createDownloadPdfButton(chartForm) {
-	let downloadPdfButton = createImageButton('assets/pdf-download.png', 'assets/pdf-download-hover.png', 'Download PDF', function() {
+	let downloadPdfButton = createImageButton('../assets/pdf-download.png', '../assets/pdf-download-hover.png', 'Download PDF', function() {
 		let exporter = new ChartPdfExporter(chartForm);
 		let chart = chartForm.retrieveChart();
 		let fileName = generateChartFileName(chart, 'pdf');
@@ -58,7 +58,7 @@ function createDownloadPdfButton(chartForm) {
 }
 
 function createDownloadCsvButton(chartForm) {
-	let downloadCsvButton = createImageButton('assets/csv-download.png', 'assets/csv-download-hover.png', 'Download CSV', function() {
+	let downloadCsvButton = createImageButton('../assets/csv-download.png', '../assets/csv-download-hover.png', 'Download CSV', function() {
 		exportChart(new ChartCsvExporter(), 'csv', 'text/csv', chartForm.retrieveChart());
 	});
 	downloadCsvButton.classList.add('csv');

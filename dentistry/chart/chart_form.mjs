@@ -84,20 +84,8 @@ export class ChartForm {
 		);
 		chartForm_cacheInputs(this);
 		chartForm_cacheToothNumbers(this);
-		this._upperGraph = new ChartGraph(upperCanvas, JAW.UPPER, () => {
-			let firstToothNumberCell = upperRightBuccalTable.querySelector('.tooth_number');
-			let startX = firstToothNumberCell.getBoundingClientRect().x;
-			let endX = upperLeftBuccalTable.getBoundingClientRect().x + upperLeftBuccalTable.getBoundingClientRect().width;
-			let newWidth = endX - startX;
-			return newWidth * 0.8;
-		});
-		this._lowerGraph = new ChartGraph(lowerCanvas, JAW.LOWER, () => {
-			let firstToothNumberCell = lowerRightBuccalTable.querySelector('.tooth_number');
-			let startX = firstToothNumberCell.getBoundingClientRect().x;
-			let endX = lowerLeftBuccalTable.getBoundingClientRect().x + lowerLeftBuccalTable.getBoundingClientRect().width;
-			let newWidth = endX - startX;
-			return newWidth;
-		});
+		this._graphScaleFactor = 1.0;
+		chartForm_createGraphs(this, upperCanvas, lowerCanvas);
 	}
 
 	restoreChart(chart) {
@@ -133,6 +121,10 @@ export class ChartForm {
 
 	lowerGraph() {
 		return this._lowerGraph;
+	}
+
+	setGraphScaleFactor(graphScaleFactor) {
+		this._graphScaleFactor = graphScaleFactor;
 	}
 }
 
@@ -219,6 +211,32 @@ function chartForm_cacheInputs(chartForm) {
 function chartForm_cacheToothNumbers(chartForm) {
 	let toothNumbers = Array.from(chartForm._elements.container.querySelectorAll('.tooth_number'));
 	chartForm._elements.toothNumbers = toothNumbers;
+}
+
+function chartForm_createGraphs(chartForm, upperCanvas, lowerCanvas) {
+	const createPreferredWidthGetterUsingJawTables = (rightTable, leftTable) => {
+		return () => {
+			let firstToothNumberCell = rightTable.querySelector('.tooth_number');
+			let startX = firstToothNumberCell.getBoundingClientRect().x;
+			let endX = leftTable.getBoundingClientRect().x + leftTable.getBoundingClientRect().width;
+			let newWidth = endX - startX;
+			return newWidth;
+		};
+	};
+	const scaleDecorator = (preferredWidthGetter) => {
+		return () => preferredWidthGetter() * chartForm._graphScaleFactor;
+	};
+
+	const upperGraphPreferredWidthGetter =
+		scaleDecorator(
+			createPreferredWidthGetterUsingJawTables(chartForm._elements.tables.upper.buccal.right, chartForm._elements.tables.upper.buccal.left)
+		);
+	const lowerGraphPreferredWidthGetter =
+		scaleDecorator(
+			createPreferredWidthGetterUsingJawTables(chartForm._elements.tables.lower.buccal.right, chartForm._elements.tables.lower.buccal.left)
+		);
+	chartForm._upperGraph = new ChartGraph(upperCanvas, JAW.UPPER, upperGraphPreferredWidthGetter);
+	chartForm._lowerGraph = new ChartGraph(lowerCanvas, JAW.LOWER, lowerGraphPreferredWidthGetter);
 }
 
 function chartForm_restoreChart(form, chart) {
