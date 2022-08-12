@@ -1,9 +1,9 @@
-import { FileOpener } from './file/opener.mjs';
 import { ChartUrlCoder } from './chart_coder/url.mjs';
 import { ChartUrlComponentCoder } from './chart_coder/url_component.mjs';
-import { ChartExportDialog } from './chart_export_dialog.mjs';
-import { ChartDownloadDialog } from './chart_download_dialog.mjs';
 import { ChartForm } from './chart_form.mjs';
+import { ChartExportDialog } from './dialog/chart_export.mjs';
+import { ChartDownloadDialog } from './dialog/chart_download.mjs';
+import { FileOpenerDialog } from './dialog/file_opener.mjs';
 import * as Radiant from './radiant.mjs';
 
 function main() {
@@ -46,7 +46,7 @@ function restoreChartFromJson(chartForm, json) {
 
 function onUploadClick(chartForm) {
 	if (onUploadClick.dialog === undefined)
-		onUploadClick.dialog = new FileOpener(onUploadFileChosen.bind(null, chartForm));
+		onUploadClick.dialog = new FileOpenerDialog('application/json', onUploadFileChosen.bind(null, chartForm));
 	onUploadClick.dialog.show();
 }
 

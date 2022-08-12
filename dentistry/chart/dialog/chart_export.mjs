@@ -1,9 +1,9 @@
-import * as Element from './sui/elements.mjs';
-import * as Dialog from './sui/dialog.mjs';
-import { ChartCsvExporter } from './chart_export/csv.mjs';
-import { ChartPdfExporter } from './chart_export/pdf.mjs';
-import { FileSaver } from './file/saver.mjs';
-import { generateChartFileName } from './chart_export/file_name.mjs';
+import * as Element from '../sui/elements.mjs';
+import * as Dialog from '../sui/dialog.mjs';
+import { ChartCsvExporter } from '../chart_export/csv.mjs';
+import { ChartPdfExporter } from '../chart_export/pdf.mjs';
+import { FileSaver } from '../file/saver.mjs';
+import { generateChartFileName } from '../chart_export/file_name.mjs';
 
 export class ChartExportDialog {
 	static showDialog(chartUrlHandler, chartForm) {

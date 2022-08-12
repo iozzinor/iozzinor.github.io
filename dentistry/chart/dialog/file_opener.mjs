@@ -1,11 +1,11 @@
 import * as Element from '../sui/elements.mjs';
 import * as Dialog from '../sui/dialog.mjs';
 
-export class FileOpener {
-	constructor(didSelectFile) {
+export class FileOpenerDialog {
+	constructor(acceptedFiles, didSelectFile) {
 		let self = this;
 
-		this._inputFile = createInputFile();
+		this._inputFile = createInputFile(acceptedFiles);
 		this._inputFile.addEventListener('change', function(event) {
 			fileOpener_updateDoneButtonEnable(self);
 		});
@@ -46,10 +46,10 @@ export class FileOpener {
 	}
 }
 
-function createInputFile() {
+function createInputFile(acceptedFiles) {
 	return Element.create('input')
 		.type('file')
-		.accept('application/json')
+		.accept(acceptedFiles)
 		.build();
 }
 

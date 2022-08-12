@@ -1,7 +1,7 @@
-import { FileSaver } from './file/saver.mjs';
-import { generateChartFileName } from './chart_export/file_name.mjs';
-import * as Element from './sui/elements.mjs';
-import * as Dialog from './sui/dialog.mjs';
+import { FileSaver } from '../file/saver.mjs';
+import { generateChartFileName } from '../chart_export/file_name.mjs';
+import * as Element from '../sui/elements.mjs';
+import * as Dialog from '../sui/dialog.mjs';
 
 export class ChartDownloadDialog {
 	static showDialog(chartForm) {
