@@ -8,9 +8,9 @@ const BUCCO_LINGUAL_POSITION = {
 	buccal: 'buccal',
 };
 
-export function populateTables(tables, onToothNumberCellClick, onGingivalMarginChange, onProbingDepthChange) {
+export function populateTables(tables, onToothNumberCellClick, onGingivalMarginChange, onProbingDepthChange, onBleedingOnProbingCheck, onPlaqueCheck) {
 	createToothNumberRowsForUpperJaw(tables, onToothNumberCellClick);
-	createStatementRows(tables, onGingivalMarginChange, onProbingDepthChange);
+	createStatementRows(tables, onGingivalMarginChange, onProbingDepthChange, onBleedingOnProbingCheck, onPlaqueCheck);
 	createToothNumberRowsForLowerJaw(tables, onToothNumberCellClick);
 }
 
@@ -52,12 +52,12 @@ function createToothNumberCell(toothNumber, onToothNumberCellClick) {
 	return cell;
 }
 
-function createStatementRows(tables, onGingivalMarginChange, onProbingDepthChange) {
+function createStatementRows(tables, onGingivalMarginChange, onProbingDepthChange, onBleedingOnProbingCheck, onPlaqueCheck) {
 	const creators = {
 		gingivalMargin:     { rowGenerator: createGingivalMarginRow.bind(null, onGingivalMarginChange), label: 'Gingival Margin' },
-		bleedingOnProbing:  { rowGenerator: createBleedingOnProbingRow, label: 'Bleeding on Probing' },
+		bleedingOnProbing:  { rowGenerator: createBleedingOnProbingRow.bind(null, onBleedingOnProbingCheck), label: 'Bleeding on Probing' },
 		probingDepth:       { rowGenerator: createProbingDepthRow.bind(null, onProbingDepthChange), label: 'Probing Depth' },
-		plaque:             { rowGenerator: createPlaqueRow, label: 'Plaque' },
+		plaque:             { rowGenerator: createPlaqueRow.bind(null, onPlaqueCheck), label: 'Plaque' },
 	};
 
 	const toothNumberIterators = {
@@ -168,17 +168,17 @@ function createProbingDepthRow(onProbingDepthChange, toothNumberIterator, buccoL
 		});
 }
 
-function createBleedingOnProbingRow(toothNumberIterator, buccoLingualPosition) {
+function createBleedingOnProbingRow(onBleedingOnProbingCheck, toothNumberIterator, buccoLingualPosition) {
 	return generateRowWithToothSitesCell(toothNumberIterator, 'bleeding_on_probing',
 		(toothNumber, position) => {
-			return createCheckboxWithInput('bleeding-on-probing', toothNumber, position, buccoLingualPosition);
+			return createCheckboxWithInput('bleeding-on-probing', toothNumber, position, buccoLingualPosition, onBleedingOnProbingCheck);
 		});
 }
 
-function createPlaqueRow(toothNumberIterator, buccoLingualPosition) {
+function createPlaqueRow(onPlaqueCheck, toothNumberIterator, buccoLingualPosition) {
 	return generateRowWithToothSitesCell(toothNumberIterator, 'plaque',
 		(toothNumber, position) => {
-			return createCheckboxWithInput('plaque', toothNumber, position, buccoLingualPosition);
+			return createCheckboxWithInput('plaque', toothNumber, position, buccoLingualPosition, onPlaqueCheck);
 		});
 }
 
@@ -186,10 +186,12 @@ function createToothSiteId(id_prefix, toothNumber, position, buccoLingualPositio
 	return `${id_prefix}_${toothNumber}_${position}_${buccoLingualPosition}`;
 }
 
-function createCheckboxWithInput(id_prefix, toothNumber, position, buccoLingualPosition) {
+function createCheckboxWithInput(id_prefix, toothNumber, position, buccoLingualPosition, onInputCheck) {
 	let id = createToothSiteId(id_prefix, toothNumber, position, buccoLingualPosition);
+    let checkbox = Element.create('input').id(id).type('checkbox').build();
+    checkbox.addEventListener('change', onInputCheck);
 	return Element.create('div').add([
-		Element.create('input').id(id).type('checkbox'),
+        checkbox,
 		Element.create('label').htmlFor(id)
 	]);
 }

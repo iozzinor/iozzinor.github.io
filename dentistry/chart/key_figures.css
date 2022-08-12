@@ -1,0 +1,13 @@
+.key-figures {
+    display: grid;
+    grid-template-columns: repeat(2,2fr 1fr);
+    column-gap: 1vw;
+}
+
+.key-figures label {
+    text-align: right;
+}
+
+.key-figures p {
+    margin: 0;
+}

@@ -5,6 +5,7 @@
 		<title>Periodontal Chart</title>
 		<script src="jspdf.umd.min.js" type="application/javascript"></script>
 		<script src="main.mjs" type="module"></script>
+        <link rel="icon" href="favicon.png"/>
 		<link rel="stylesheet" href="sui/dialog.css"/>
 		<link rel="stylesheet" href="main.css"/>
 		<link rel="stylesheet" href="chart_graph.css"/>
@@ -13,6 +14,7 @@
 		<link rel="stylesheet" href="dialog/file_opener.css"/>
 		<link rel="stylesheet" href="dialog/settings.css"/>
 		<link rel="stylesheet" href="periodontal_charts.css"/>
+        <link rel="stylesheet" href="key_figures.css"/>
 		<link rel="stylesheet" href="radiant.css"/>
 	</head>
 	<body>
@@ -52,6 +54,19 @@
 				<input id="chart-follow_type-reevaluation" name="follow_type" autocomplete="off" type="radio" value="reevaluation"/>
 				<label for="chart-follow_type-reevaluation">Reevaluation</label>
 			</div>
+            <div class="section">
+                <p class="title">Key Figures</p>
+                <div class="key-figures">
+                    <label>Mean Probing Depth (mm):</label>
+                    <p id="key-figures_mean-probing-depth">-</p>
+                    <label>Mean Attachment Level (mm):</label>
+                    <p id="key-figures_mean-attachment-level">-</p>
+                    <label>Bleeding on Probing:</label>
+                    <p id="key-figures_bleeding-on-probing-percent">-</p>
+                    <label>Plaque:</label>
+                    <p id="key-figures_plaque-percent">-</p>
+                </div>
+            </div>
 
 			<div id="periodontal-chart_container">
 				<div id="periodontal-chart_upper-buccal" class="periodontal-chart_tables">
