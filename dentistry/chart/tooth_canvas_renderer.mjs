@@ -16,13 +16,13 @@ function makePointConvertorFromStyle(style) {
 	}
 
 return (point, rect) => {
-		point = convertNormalizePoint(point, rect);
+		point = convertNormalizedPoint(point, rect);
 		pointAdptors.forEach(adpator => adpator(point, rect));
 		return point;
 	};
 }
 
-function convertNormalizePoint(point, rect) {
+function convertNormalizedPoint(point, rect) {
 	return {
 		x: rect.x + point.x * rect.width,
 		y: rect.y + point.y * rect.height,
