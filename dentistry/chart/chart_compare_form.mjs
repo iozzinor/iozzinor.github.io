@@ -15,6 +15,7 @@ export function populateComparisonChartsContainer(comparisonChartsContainer, sin
 		.add([
 			backButton,
 			Element.create('h1').text('Compare Charts'),
+			Element.create('h2').text('Upper Jaw'),
 			Element
 				.create('div')
 				.className('compare-charts_jaw')
@@ -24,6 +25,7 @@ export function populateComparisonChartsContainer(comparisonChartsContainer, sin
 					upperCanvas
 				]),
 			Element.create('hr').marginTop('5rem').marginBottom('5rem'),
+			Element.create('h2').text('Lower Jaw'),
 			Element
 				.create('div')
 				.className('compare-charts_jaw')
@@ -54,9 +56,9 @@ function createChartGraph(canvas, jaw, reference, comparison) {
 	let graph = new ChartGraph(canvas, jaw, () => canvas.clientWidth);
 
 	setChartGraphMissingTeeth(graph, jaw, comparison);
-    let referenceAttachmentLevels = retrieveChartAttachmentLevels(graph.teeth(), reference);
-    let comparisonAttachmentLevels = retrieveChartAttachmentLevels(graph.teeth(), comparison);
-    let comparisonRenderer = new ChartGraphComparisonRenderer(referenceAttachmentLevels, comparisonAttachmentLevels);
+	let referenceAttachmentLevels = retrieveChartAttachmentLevels(graph.teeth(), reference);
+	let comparisonAttachmentLevels = retrieveChartAttachmentLevels(graph.teeth(), comparison);
+	let comparisonRenderer = new ChartGraphComparisonRenderer(referenceAttachmentLevels, comparisonAttachmentLevels);
 
 	graph.attachRenderer(comparisonRenderer);
 	graph.resize();
@@ -82,33 +84,33 @@ function setChartGraphMissingTeeth(graph, jaw, comparison) {
 }
 
 function retrieveChartAttachmentLevels(graphTeeth, chart) {
-    const extractValue = (n) => (n == null || Number.isNaN(n)) ? 0 : n;
+	const extractValue = (n) => (n == null || Number.isNaN(n)) ? 0 : n;
 
-    let result = {};
+	let result = {};
 	for (const [index, tooth] of Object.entries(graphTeeth)) {
-        let toothSiteIndexes = [];
-        let isUpper = ToothNumbers.isInUpperJaw(tooth);
-        let jawOffset = isUpper ? 0 : 16 * 3 * 2;
-        let buccalOffset = isUpper ? 0 : 16 * 3;
-        let lingualOffset = isUpper ? 16 * 3 : 0;
-        let innerOffset = parseInt(index) * 3;
-        let levels = {
-            buccal: [],
-            lingual: [],
-        };
+		let toothSiteIndexes = [];
+		let isUpper = ToothNumbers.isInUpperJaw(tooth);
+		let jawOffset = isUpper ? 0 : 16 * 3 * 2;
+		let buccalOffset = isUpper ? 0 : 16 * 3;
+		let lingualOffset = isUpper ? 16 * 3 : 0;
+		let innerOffset = parseInt(index) * 3;
+		let levels = {
+			buccal: [],
+			lingual: [],
+		};
 
-        for (var i = 0; i < 3; ++i) {
-            let buccalIndex = jawOffset + innerOffset + buccalOffset + i;
-            let lingualIndex = jawOffset + innerOffset + lingualOffset + i;
-            levels.buccal.push(
-                extractValue(chart.probingDepths[buccalIndex]) - extractValue(chart.gingivalMargins[buccalIndex])
-            );
-            levels.lingual.push(
-                extractValue(chart.probingDepths[lingualIndex]) - extractValue(chart.gingivalMargins[lingualIndex])
-            );
-        }
-        result[tooth] = levels;
+		for (var i = 0; i < 3; ++i) {
+			let buccalIndex = jawOffset + innerOffset + buccalOffset + i;
+			let lingualIndex = jawOffset + innerOffset + lingualOffset + i;
+			levels.buccal.push(
+				extractValue(chart.probingDepths[buccalIndex]) - extractValue(chart.gingivalMargins[buccalIndex])
+			);
+			levels.lingual.push(
+				extractValue(chart.probingDepths[lingualIndex]) - extractValue(chart.gingivalMargins[lingualIndex])
+			);
+		}
+		result[tooth] = levels;
 	}
-    return result;
+	return result;
 }
 
