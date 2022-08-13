@@ -4,6 +4,7 @@ import { ChartForm } from './chart_form.mjs';
 import { ChartExportDialog } from './dialog/chart_export.mjs';
 import { ChartDownloadDialog } from './dialog/chart_download.mjs';
 import { FileOpenerDialog } from './dialog/file_opener.mjs';
+import { ChartCompareDialog } from './dialog/chart_compare.mjs';
 import { SettingsDialog } from './dialog/settings.mjs';
 import { Settings } from './settings.mjs';
 import * as Radiant from './radiant.mjs';
@@ -17,7 +18,7 @@ function main() {
 	setupToolboxClickListeners(chartForm, chartUrlHandler, settings);
 	attemptToExtractChartFromUrl(chartForm, chartUrlHandler);
 	setupPatientNameInputListeners(chartForm);
-    setupBeforeUnloadListener();
+	setupBeforeUnloadListener();
 }
 
 function loadSettings() {
@@ -29,14 +30,19 @@ function restoreSettings(chartForm, settings) {
 }
 
 function setupToolboxClickListeners(chartForm, chartUrlHandler, settings) {
+	let singleChartContainer = document.getElementById('single-chart');
+	let comparisonChartsContainer = document.getElementById('comparison-charts');
+
 	let uploadButton = document.getElementById('upload');
 	let downloadButton = document.getElementById('download');
 	let exportButton = document.getElementById('export');
+	let compareButton = document.getElementById('compare');
 	let settingsButton = document.getElementById('settings');
 
 	uploadButton.addEventListener('click', onUploadClick.bind(null, chartForm));
 	downloadButton.addEventListener('click', onDownloadClick.bind(null, chartForm));
 	exportButton.addEventListener('click', onExportClick.bind(null, chartUrlHandler, chartForm));
+	compareButton.addEventListener('click', onCompareClick.bind(null, singleChartContainer, comparisonChartsContainer));
 	settingsButton.addEventListener('click', onSettingsClick.bind(null, chartForm, settings));
 }
 
@@ -57,11 +63,11 @@ function setupPatientNameInputListeners(chartForm) {
 }
 
 function setupBeforeUnloadListener() {
-    window.addEventListener('beforeunload', function(event) {
-        event.preventDefault();
-        event.returnValue = 'Are your sure you want to quit?';
-        return event.returnValue;
-    });
+	window.addEventListener('beforeunload', function(event) {
+		event.preventDefault();
+		event.returnValue = 'Are your sure you want to quit?';
+		return event.returnValue;
+	});
 }
 
 function onUploadFileChosen(chartForm, file) {
@@ -91,6 +97,17 @@ function onDownloadClick(chartForm) {
 
 function onExportClick(chartUrlHandler, chartForm) {
 	ChartExportDialog.showDialog(chartUrlHandler, chartForm);
+}
+
+function onCompareClick(singleChartContainer, comparisonChartsContainer) {
+	if (onCompareClick.dialog === undefined)
+		onCompareClick.dialog = new ChartCompareDialog((reference, comparison) => {
+			onCompareClick.dialog.close();
+
+			singleChartContainer.style.display = 'none';
+			comparisonChartsContainer.style.display = '';
+		});
+	onCompareClick.dialog.show();
 }
 
 function onSettingsClick(chartForm, settings) {

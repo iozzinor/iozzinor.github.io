@@ -1,0 +1,80 @@
+:root
+{
+	--color: black;
+	--background-color: white;
+	--dialog-box-shadow-color: rgba(0, 0, 0, 0.5);
+	--light-background-contrast: gray;
+}
+
+#alert_veil
+{
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+
+	background-color: rgba(50, 50, 50, 0.5);
+
+	border: black solid 1px;
+	z-index: 1001;
+}
+
+.alert
+{
+	z-index: 1002;
+	overflow: auto;
+	position: fixed;
+	background-color: var(--background-color);
+	box-shadow: 0px 0px 10px var(--dialog-box-shadow-color);
+	border-radius: 5px;
+	padding: 5px;
+
+	max-width: 80vw;
+	max-height: 80vh;
+
+	top: 50vh;
+	left: 50vw;
+	display: flex;
+	flex-direction: column;
+
+	transform: translateX(-50%) translateY(-50%);
+}
+
+.alert .buttons_holder
+{
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	margin-left: auto;
+	padding-top: 0.5em;
+	border-top: 0.5px solid var(--color);
+}
+
+.alert .button
+{
+	flex: 1;
+	display: inline-block;
+	text-align: center;
+	border-right: 0.5px solid var(--color);
+	padding-right: 1em;
+	padding-left: 1em;
+}
+
+.alert .button span
+{
+	border-radius: 0.5em;
+	padding: 0.25em 1em 0.25em 1em;
+}
+
+.alert .button:hover span
+{
+	color: var(--background-color);
+	background-color: var(--color);
+}
+
+.alert .button:last-child
+{
+	border-right: none;
+}

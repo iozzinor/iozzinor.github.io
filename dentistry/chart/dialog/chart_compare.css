@@ -1,0 +1,12 @@
+.chart-compare_dialog_container .files-row
+{
+	padding: 2rem;
+	display: flex;
+	flex-direction: row;
+	column-gap: 0.5vw;
+}
+
+.chart-compare_dialog_container .arrows
+{
+	font-size: 5rem;
+}
