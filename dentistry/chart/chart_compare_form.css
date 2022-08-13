@@ -1,0 +1,22 @@
+.compare-charts_jaw
+{
+	display: grid;
+	grid-template-columns: 1fr 6fr;
+	column-gap: 1vw;
+}
+
+.compare-charts_jaw p
+{
+	text-align: right;
+	font-size: 2.5rem;
+	height: 2.5rem;
+	margin-left: auto;
+}
+
+.compare-charts_jaw canvas
+{
+	grid-column-start: 2;
+	grid-row-start: 1;
+	grid-row-end: 3;
+	width: 100%;
+}

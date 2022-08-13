@@ -5,6 +5,7 @@ import { ChartExportDialog } from './dialog/chart_export.mjs';
 import { ChartDownloadDialog } from './dialog/chart_download.mjs';
 import { FileOpenerDialog } from './dialog/file_opener.mjs';
 import { ChartCompareDialog } from './dialog/chart_compare.mjs';
+import * as ChartCompareForm from './chart_compare_form.mjs';
 import { SettingsDialog } from './dialog/settings.mjs';
 import { Settings } from './settings.mjs';
 import * as Radiant from './radiant.mjs';
@@ -101,13 +102,23 @@ function onExportClick(chartUrlHandler, chartForm) {
 
 function onCompareClick(singleChartContainer, comparisonChartsContainer) {
 	if (onCompareClick.dialog === undefined)
-		onCompareClick.dialog = new ChartCompareDialog((reference, comparison) => {
-			onCompareClick.dialog.close();
-
-			singleChartContainer.style.display = 'none';
-			comparisonChartsContainer.style.display = '';
+		onCompareClick.dialog = new ChartCompareDialog((reference, comparision) => {
+			displayComparison(singleChartContainer, comparisonChartsContainer, reference, comparision);
 		});
 	onCompareClick.dialog.show();
+}
+
+function displayComparison(singleChartContainer, comparisonChartsContainer, reference, comparison) {
+	onCompareClick.dialog.close();
+	singleChartContainer.style.display = 'none';
+	comparisonChartsContainer.style.display = null;
+	clearComparisonChartsContainer(comparisonChartsContainer);
+	ChartCompareForm.populateComparisonChartsContainer(comparisonChartsContainer, singleChartContainer, reference, comparison);
+}
+
+function clearComparisonChartsContainer(comparisonChartsContainer) {
+	for (let child of comparisonChartsContainer.children)
+		child.remove();
 }
 
 function onSettingsClick(chartForm, settings) {

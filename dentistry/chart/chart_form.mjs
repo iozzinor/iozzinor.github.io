@@ -1,5 +1,6 @@
 import * as ChartTable from './chart_table.mjs';
 import { ChartGraph, JAW } from './chart_graph.mjs';
+import { ChartGraphPocketsRenderer } from './chart_graph_pockets_render.mjs';
 import * as ToothNumbers from './tooth_numbers.mjs';
 import * as ProbingDepth from './probing_depth.mjs';
 
@@ -48,10 +49,10 @@ export class ChartForm {
 		lowerLeftLingualTable,
 		upperCanvas,
 		lowerCanvas,
-        meanProbingDepth,
-        meanAttachmentLevel,
-        bleedingOnProbingPercent,
-        plaquePercent,
+		meanProbingDepth,
+		meanAttachmentLevel,
+		bleedingOnProbingPercent,
+		plaquePercent,
 	) {
 		this._elements = {
 			container: container,
@@ -84,12 +85,12 @@ export class ChartForm {
 					}
 				}
 			},
-            keyFigures: {
-                meanProbingDepth: meanProbingDepth,
-                meanAttachmentLevel: meanAttachmentLevel,
-                plaquePercent: plaquePercent,
-                bleedingOnProbingPercent: bleedingOnProbingPercent,
-            }
+			keyFigures: {
+				meanProbingDepth: meanProbingDepth,
+				meanAttachmentLevel: meanAttachmentLevel,
+				plaquePercent: plaquePercent,
+				bleedingOnProbingPercent: bleedingOnProbingPercent,
+			}
 		};
 		chartForm_setDateToNow(this);
 		ChartTable.populateTables(
@@ -108,7 +109,7 @@ export class ChartForm {
 
 	restoreChart(chart) {
 		chartForm_restoreChart(this, chart);
-        chartForm_refreshAllKeyFiguresWithChart(this, chart);
+		chartForm_refreshAllKeyFiguresWithChart(this, chart);
 	}
 
 	retrievePatient() {
@@ -167,11 +168,15 @@ function chartForm_onToothNumberCellClick(form, toothNumber, event) {
 	let graphs = chartForm_getGraphsHavingTooth(form, toothNumber);
 	for (let graph of graphs)
 		graph.render();
-    chartForm_refreshAllKeyFigures(form);
+	chartForm_refreshAllKeyFigures(form);
 }
 
 function chartForm_getGraphsHavingTooth(form, toothNumber) {
 	return [form._upperGraph, form._lowerGraph].filter(graph => graph.hasTooth(toothNumber));
+}
+
+function chartForm_getGraphPocketsRendererHavingTooth(form, toothNumber) {
+	return [form._upperGraphPocketsRenderer, form._lowerGraphPocketsRenderer].filter(renderer => renderer.hasTooth(toothNumber));
 }
 
 function chartForm_onGingivalMarginChange(form, toothNumber, sitePosition, event) {
@@ -180,30 +185,30 @@ function chartForm_onGingivalMarginChange(form, toothNumber, sitePosition, event
 	let graphs = chartForm_getGraphsHavingTooth(form, toothNumber);
 	for (let graph of graphs)
 		graph.render();
-    chartForm_refreshMeanProbingDepthAndAttachmentLevel(form);
+	chartForm_refreshMeanProbingDepthAndAttachmentLevel(form);
 }
 
 function chartForm_onProbingDepthChange(form, toothNumber, sitePosition, event) {
 	let graphs = chartForm_getGraphsHavingTooth(form, toothNumber);
 	let probingDepth = parseInt(event.target.value);
-    chartForm_setProbingDepthSite(form, toothNumber, sitePosition, probingDepth);
+	chartForm_setProbingDepthSite(form, toothNumber, sitePosition, probingDepth);
 	for (let graph of graphs)
 		graph.render();
-    chartForm_refreshMeanProbingDepthAndAttachmentLevel(form);
+	chartForm_refreshMeanProbingDepthAndAttachmentLevel(form);
 }
 
 function chartForm_onBleedingOnProbingCheck(form) {
-    let chart = form.retrieveChart();
-    let siteIndexes = chartForm_getSiteIndexesForPresentTeeth(form, chart);
-    let bleedingOnProbings = siteIndexes.map(index => chart.bleedingOnProbing[index] == '1');
-    chartForm_refreshBleedingOnProbingPercent(form, bleedingOnProbings);
+	let chart = form.retrieveChart();
+	let siteIndexes = chartForm_getSiteIndexesForPresentTeeth(form, chart);
+	let bleedingOnProbings = siteIndexes.map(index => chart.bleedingOnProbing[index] == '1');
+	chartForm_refreshBleedingOnProbingPercent(form, bleedingOnProbings);
 }
 
 function chartForm_onPlaqueCheck(form) {
-    let chart = form.retrieveChart();
-    let siteIndexes = chartForm_getSiteIndexesForPresentTeeth(form, chart);
-    let plaques = siteIndexes.map(index => chart.plaque[index] == '1');
-    chartForm_refreshPlaquePercent(form, plaques);
+	let chart = form.retrieveChart();
+	let siteIndexes = chartForm_getSiteIndexesForPresentTeeth(form, chart);
+	let plaques = siteIndexes.map(index => chart.plaque[index] == '1');
+	chartForm_refreshPlaquePercent(form, plaques);
 }
 
 function chartForm_setIsToothMissing(form, toothNumber, isMissing) {
@@ -220,15 +225,15 @@ function chartForm_setIsToothMissing(form, toothNumber, isMissing) {
 }
 
 function chartForm_setGingivalMarginSite(form, toothNumber, sitePosition, gingivalMargin) {
-	let graphs = chartForm_getGraphsHavingTooth(form, toothNumber);
-	for (let graph of graphs)
-		graph.setGingivalMargin(toothNumber, sitePosition, gingivalMargin);
+	let renderers = chartForm_getGraphPocketsRendererHavingTooth(form, toothNumber);
+	for (let renderer of renderers)
+		renderer.setGingivalMargin(toothNumber, sitePosition, gingivalMargin);
 }
 
 function chartForm_setProbingDepthSite(form, toothNumber, sitePosition, probingDepth) {
-	let graphs = chartForm_getGraphsHavingTooth(form, toothNumber);
-	for (let graph of graphs)
-		graph.setProbingDepth(toothNumber, sitePosition, probingDepth);
+	let renderers = chartForm_getGraphPocketsRendererHavingTooth(form, toothNumber);
+	for (let renderer of renderers)
+		renderer.setProbingDepth(toothNumber, sitePosition, probingDepth);
 }
 
 
@@ -274,7 +279,11 @@ function chartForm_createGraphs(chartForm, upperCanvas, lowerCanvas) {
 			createPreferredWidthGetterUsingJawTables(chartForm._elements.tables.lower.buccal.right, chartForm._elements.tables.lower.buccal.left)
 		);
 	chartForm._upperGraph = new ChartGraph(upperCanvas, JAW.UPPER, upperGraphPreferredWidthGetter);
+	chartForm._upperGraphPocketsRenderer = new ChartGraphPocketsRenderer(chartForm._upperGraph.teeth());
+	chartForm._upperGraph.attachRenderer(chartForm._upperGraphPocketsRenderer);
 	chartForm._lowerGraph = new ChartGraph(lowerCanvas, JAW.LOWER, lowerGraphPreferredWidthGetter);
+	chartForm._lowerGraphPocketsRenderer = new ChartGraphPocketsRenderer(chartForm._lowerGraph.teeth());
+	chartForm._lowerGraph.attachRenderer(chartForm._lowerGraphPocketsRenderer);
 }
 
 function chartForm_restoreChart(form, chart) {
@@ -378,112 +387,112 @@ function chartForm_restoreMissingTeeth(form, data) {
 }
 
 function chartForm_refreshAllKeyFigures(form) {
-    let chart = form.retrieveChart();
-    chartForm_refreshAllKeyFiguresWithChart(form, chart);
+	let chart = form.retrieveChart();
+	chartForm_refreshAllKeyFiguresWithChart(form, chart);
 }
 
 function chartForm_refreshAllKeyFiguresWithChart(form, chart) {
-    let siteIndexes = chartForm_getSiteIndexesForPresentTeeth(form, chart);
-    chartForm_refreshMeanProbingDepthAndAttachmentLevelWithSiteIndexes(form, chart, siteIndexes);
+	let siteIndexes = chartForm_getSiteIndexesForPresentTeeth(form, chart);
+	chartForm_refreshMeanProbingDepthAndAttachmentLevelWithSiteIndexes(form, chart, siteIndexes);
 
-    let bleedingOnProbings = siteIndexes.map(index => chart.bleedingOnProbing[index] == '1');
-    chartForm_refreshBleedingOnProbingPercent(form, bleedingOnProbings);
-    let plaques = siteIndexes.map(index => chart.plaque[index] == '1');
-    chartForm_refreshPlaquePercent(form, plaques);
+	let bleedingOnProbings = siteIndexes.map(index => chart.bleedingOnProbing[index] == '1');
+	chartForm_refreshBleedingOnProbingPercent(form, bleedingOnProbings);
+	let plaques = siteIndexes.map(index => chart.plaque[index] == '1');
+	chartForm_refreshPlaquePercent(form, plaques);
 }
 
 function computeMeanProbingDepths(probingDepths) {
-    return probingDepths.reduce((acc, current) => acc + numberOrZero(current), 0) / probingDepths.length;
+	return probingDepths.reduce((acc, current) => acc + numberOrZero(current), 0) / probingDepths.length;
 }
 
 function computeMeanAttachmentLevels(probingDepths, gingivalMargins) {
-    let result = 0;
-    for (var i = 0; i < probingDepths.length; ++i) {
-        result += numberOrZero(probingDepths[i]) - numberOrZero(gingivalMargins[i]);
-    }
-    return result / probingDepths.length;
+	let result = 0;
+	for (var i = 0; i < probingDepths.length; ++i) {
+		result += numberOrZero(probingDepths[i]) - numberOrZero(gingivalMargins[i]);
+	}
+	return result / probingDepths.length;
 }
 
 function numberOrZero(n) {
-    return (n == null || Number.isNaN(n)) ? 0 : n;
+	return (n == null || Number.isNaN(n)) ? 0 : n;
 }
 
 function chartForm_refreshMeanProbingDepthAndAttachmentLevel(form) {
-    let chart = form.retrieveChart();
-    let siteIndexes = chartForm_getSiteIndexesForPresentTeeth(form, chart);
-    chartForm_refreshMeanProbingDepthAndAttachmentLevelWithSiteIndexes(form, chart, siteIndexes);
+	let chart = form.retrieveChart();
+	let siteIndexes = chartForm_getSiteIndexesForPresentTeeth(form, chart);
+	chartForm_refreshMeanProbingDepthAndAttachmentLevelWithSiteIndexes(form, chart, siteIndexes);
 }
 
 function chartForm_refreshMeanProbingDepthAndAttachmentLevelWithSiteIndexes(form, chart, siteIndexes) {
-    let probingDepths = siteIndexes.map(index => chart.probingDepths[index]);
-    let gingivalMargins = siteIndexes.map(index => chart.gingivalMargins[index]);
-    chartForm_refreshMeanProbingDepth(form, probingDepths);
-    chartForm_refreshMeanAttachmentLevel(form, probingDepths, gingivalMargins);
+	let probingDepths = siteIndexes.map(index => chart.probingDepths[index]);
+	let gingivalMargins = siteIndexes.map(index => chart.gingivalMargins[index]);
+	chartForm_refreshMeanProbingDepth(form, probingDepths);
+	chartForm_refreshMeanAttachmentLevel(form, probingDepths, gingivalMargins);
 }
 
 function chartForm_getSiteIndexesForPresentTeeth(form, chart) {
-    let result = [];
-    for (const [index, missingTooth] of Object.entries(chart.missingTeeth)) {
-        if (missingTooth == '1')
-            continue;
-        let isUpper = index < 16;
-        let startSectionIndexes = isUpper ? [ 0, 16 * 3 ] : [ 16 * 3 * 2, 16 * 3 * 3 ];
-        let innerSectionOffset = (index % 16) * 3;
-        for (let startSectionIndex of startSectionIndexes) {
-            for (var i = 0; i < 3; ++i) {
-                result.push(startSectionIndex + innerSectionOffset + i);
-            }
-        }
-    }
-    return result;
+	let result = [];
+	for (const [index, missingTooth] of Object.entries(chart.missingTeeth)) {
+		if (missingTooth == '1')
+			continue;
+		let isUpper = index < 16;
+		let startSectionIndexes = isUpper ? [ 0, 16 * 3 ] : [ 16 * 3 * 2, 16 * 3 * 3 ];
+		let innerSectionOffset = (index % 16) * 3;
+		for (let startSectionIndex of startSectionIndexes) {
+			for (var i = 0; i < 3; ++i) {
+				result.push(startSectionIndex + innerSectionOffset + i);
+			}
+		}
+	}
+	return result;
 }
 
 function chartForm_refreshMeanProbingDepth(form, probingDepths) {
-    if (probingDepths.length < 1) {
-        form._elements.keyFigures.meanProbingDepth.textContent = KEY_FIGURES_NOT_APPLICABLE;
-        return;
-    }
-    let mean = computeMeanProbingDepths(probingDepths);
-    mean = keepAtMostFloatingDigits(mean, 1);
-    form._elements.keyFigures.meanProbingDepth.textContent = `${mean}`;
+	if (probingDepths.length < 1) {
+		form._elements.keyFigures.meanProbingDepth.textContent = KEY_FIGURES_NOT_APPLICABLE;
+		return;
+	}
+	let mean = computeMeanProbingDepths(probingDepths);
+	mean = keepAtMostFloatingDigits(mean, 1);
+	form._elements.keyFigures.meanProbingDepth.textContent = `${mean}`;
 }
 
 function chartForm_refreshMeanAttachmentLevel(form, probingDepths, gingivalMargins) {
-    if (gingivalMargins.length < 1) {
-        form._elements.keyFigures.meanAttachmentLevel.textContent = KEY_FIGURES_NOT_APPLICABLE;
-        return;
-    }
-    let mean = computeMeanAttachmentLevels(probingDepths, gingivalMargins);
-    mean = keepAtMostFloatingDigits(mean, 1);
-    form._elements.keyFigures.meanAttachmentLevel.textContent = `${mean}`;
+	if (gingivalMargins.length < 1) {
+		form._elements.keyFigures.meanAttachmentLevel.textContent = KEY_FIGURES_NOT_APPLICABLE;
+		return;
+	}
+	let mean = computeMeanAttachmentLevels(probingDepths, gingivalMargins);
+	mean = keepAtMostFloatingDigits(mean, 1);
+	form._elements.keyFigures.meanAttachmentLevel.textContent = `${mean}`;
 }
 
 function chartForm_refreshBleedingOnProbingPercent(form, bleedingOnProbings) {
-    if (bleedingOnProbings.length < 1) {
-        form._elements.keyFigures.bleedingOnProbingPercent.textContent = KEY_FIGURES_NOT_APPLICABLE;
-        return;
-    }
-    let percent = bleedingOnProbings.filter(bleedingOnProbing => bleedingOnProbing).length / bleedingOnProbings.length * 100;
-    percent = keepAtMostFloatingDigits(percent, 2);
-    form._elements.keyFigures.bleedingOnProbingPercent.textContent = `${percent}%`;
+	if (bleedingOnProbings.length < 1) {
+		form._elements.keyFigures.bleedingOnProbingPercent.textContent = KEY_FIGURES_NOT_APPLICABLE;
+		return;
+	}
+	let percent = bleedingOnProbings.filter(bleedingOnProbing => bleedingOnProbing).length / bleedingOnProbings.length * 100;
+	percent = keepAtMostFloatingDigits(percent, 2);
+	form._elements.keyFigures.bleedingOnProbingPercent.textContent = `${percent}%`;
 }
 
 function chartForm_refreshPlaquePercent(form, plaques) {
-    if (plaques.length < 1) {
-        form._elements.keyFigures.plaquePercent.textContent = KEY_FIGURES_NOT_APPLICABLE;
-        return;
-    }
-    let percent = plaques.filter(plaque => plaque).length / plaques.length * 100;
-    percent = keepAtMostFloatingDigits(percent, 2);
-    form._elements.keyFigures.plaquePercent.textContent = `${percent}%`;
+	if (plaques.length < 1) {
+		form._elements.keyFigures.plaquePercent.textContent = KEY_FIGURES_NOT_APPLICABLE;
+		return;
+	}
+	let percent = plaques.filter(plaque => plaque).length / plaques.length * 100;
+	percent = keepAtMostFloatingDigits(percent, 2);
+	form._elements.keyFigures.plaquePercent.textContent = `${percent}%`;
 }
 
 function keepAtMostFloatingDigits(number, nDigits) {
-    let pow = Math.pow(10, nDigits);
-  	let resultWithFloatingDigits = parseInt(number * pow);
-  	let nextDigit = parseInt(number * pow * 10) % 10;
-  	if (nextDigit > 4) {
-      resultWithFloatingDigits += 1;
-    }
-    return resultWithFloatingDigits / pow;
+	let pow = Math.pow(10, nDigits);
+	let resultWithFloatingDigits = parseInt(number * pow);
+	let nextDigit = parseInt(number * pow * 10) % 10;
+	if (nextDigit > 4) {
+	resultWithFloatingDigits += 1;
+	}
+	return resultWithFloatingDigits / pow;
 }
