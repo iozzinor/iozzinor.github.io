@@ -86,19 +86,48 @@ export class ChartGraph {
 		}
 	}
 
-	convertMillimeterOrdinate(graph, positions, isTopRow, yMillimeter) {
+	convertMillimeterOrdinate(positions, isTopRow, yMillimeter) {
 		if (isTopRow)
-			return positions.topCrownAlign - (positions.maxRootHeight * yMillimeter / graph._cache.geometry.maxRootHeight);
+			return positions.topCrownAlign - (positions.maxRootHeight * yMillimeter / this._cache.geometry.maxRootHeight);
 		else
-			return positions.bottomCrownAlign + positions.maxRootHeight * (yMillimeter / graph._cache.geometry.maxRootHeight);
+			return positions.bottomCrownAlign + positions.maxRootHeight * (yMillimeter / this._cache.geometry.maxRootHeight);
+	}
+
+	attachRenderer(renderer) {
+		this._attachedRenderers.push(renderer);
 	}
 
 	teeth() {
 		return Array.from(this._teeth);
 	}
 
-	attachRenderer(renderer) {
-		this._attachedRenderers.push(renderer);
+	getPresentTeethGroupedByContiguity() {
+		let groups = [[]];
+		for (let tooth of this._teeth) {
+			if (!this.isToothMissing(tooth)) {
+				groups[groups.length - 1].push(tooth);
+			} else if (groups[groups.length - 1].length > 0) {
+				groups.push([]);
+			}
+		}
+
+		if (groups[groups.length - 1].length < 1) {
+			groups.splice( groups.length - 1);
+		}
+		return groups;
+	}
+
+	getChartSitesAbscissas(tooth, teethBoxes) {
+		const WIDTH_RATIO = 0.8;
+		let index = this._teeth.indexOf(tooth);
+		let toothBox = teethBoxes[index];
+		let gap = toothBox.width * (1 - WIDTH_RATIO) / 2;
+
+		return [
+			toothBox.x + gap,
+			toothBox.x + toothBox.width / 2,
+			toothBox.x + toothBox.width - gap,
+		];
 	}
 }
 
@@ -285,11 +314,11 @@ function chartGraph_getRootGraduationLines(graph, positions) {
 	};
 	for (var rootGraduationMillimeter = 0; rootGraduationMillimeter < maxGraduationMillimeters + 1; ++rootGraduationMillimeter) {
 		let depth = maxGraduationMillimeters - rootGraduationMillimeter;
-		let y = graph.convertMillimeterOrdinate(graph, positions, true, depth);
+		let y = graph.convertMillimeterOrdinate(positions, true, depth);
 		lines.push(makeGraduationLineAtOrdinate(canvasWidth, y, depth));
 	}
 	for (var depth = 0; depth < maxGraduationMillimeters + EXTENDED_ROOT_GRADUATION_HEIGHT_MILLIMETERS + 1; ++depth) {
-		let y = graph.convertMillimeterOrdinate(graph, positions, false, depth);
+		let y = graph.convertMillimeterOrdinate(positions, false, depth);
 		lines.push(makeGraduationLineAtOrdinate(canvasWidth, y, depth));
 	}
 	return lines;

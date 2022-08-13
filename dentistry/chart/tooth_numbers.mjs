@@ -55,6 +55,15 @@ export function isInLeftQuadrant(toothNumber) {
         || (toothNumber > 30 && toothNumber < 39);
 }
 
+export function isInUpperJaw(toothNumber) {
+    return (toothNumber > 10 && toothNumber < 19)
+        || (toothNumber > 20 && toothNumber < 29);
+}
+export function isInLowerJaw(toothNumber) {
+    return (toothNumber > 30 && toothNumber < 39)
+        || (toothNumber > 40 && toothNumber < 49);
+}
+
 export function getToothSitesFromPatientRightToLeft(toothNumber) {
     return isInRightQuadrant(toothNumber) ? ['distal', 'middle', 'mesial'] : ['mesial', 'middle', 'distal'];
 }

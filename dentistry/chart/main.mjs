@@ -40,7 +40,7 @@ function setupToolboxClickListeners(chartForm, chartUrlHandler, settings) {
 	let compareButton = document.getElementById('compare');
 	let settingsButton = document.getElementById('settings');
 
-	uploadButton.addEventListener('click', onUploadClick.bind(null, chartForm));
+	uploadButton.addEventListener('click', onUploadClick.bind(null, chartForm, singleChartContainer, comparisonChartsContainer));
 	downloadButton.addEventListener('click', onDownloadClick.bind(null, chartForm));
 	exportButton.addEventListener('click', onExportClick.bind(null, chartUrlHandler, chartForm));
 	compareButton.addEventListener('click', onCompareClick.bind(null, singleChartContainer, comparisonChartsContainer));
@@ -71,12 +71,15 @@ function setupBeforeUnloadListener() {
 	});
 }
 
-function onUploadFileChosen(chartForm, file) {
+function onUploadFileChosen(chartForm, singleChartContainer, comparisonChartsContainer, file) {
 	let reader = new FileReader();
 	reader.readAsText(file);
 	reader.onload = function(event) {
 		let json = JSON.parse(event.target.result);
 		restoreChartFromJson(chartForm, json);
+
+		singleChartContainer.style.display = null;
+		comparisonChartsContainer.style.display = 'none';
 	};
 }
 
@@ -86,9 +89,9 @@ function restoreChartFromJson(chartForm, json) {
 		refreshTitle(json.patient);
 }
 
-function onUploadClick(chartForm) {
+function onUploadClick(chartForm, singleChartContainer, comparisonChartsContainer) {
 	if (onUploadClick.dialog === undefined)
-		onUploadClick.dialog = new FileOpenerDialog('application/json', onUploadFileChosen.bind(null, chartForm));
+		onUploadClick.dialog = new FileOpenerDialog('application/json', onUploadFileChosen.bind(null, chartForm, singleChartContainer, comparisonChartsContainer));
 	onUploadClick.dialog.show();
 }
 
@@ -112,13 +115,7 @@ function displayComparison(singleChartContainer, comparisonChartsContainer, refe
 	onCompareClick.dialog.close();
 	singleChartContainer.style.display = 'none';
 	comparisonChartsContainer.style.display = null;
-	clearComparisonChartsContainer(comparisonChartsContainer);
 	ChartCompareForm.populateComparisonChartsContainer(comparisonChartsContainer, singleChartContainer, reference, comparison);
-}
-
-function clearComparisonChartsContainer(comparisonChartsContainer) {
-	for (let child of comparisonChartsContainer.children)
-		child.remove();
 }
 
 function onSettingsClick(chartForm, settings) {

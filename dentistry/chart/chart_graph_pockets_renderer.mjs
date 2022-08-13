@@ -39,27 +39,11 @@ export class ChartGraphPocketsRenderer {
 	}
 
 	render(graph, context, positions) {
-		let teethGroups = chartGraphPocketsRenderer_getTeethGroups(graph);
+		let teethGroups = graph.getPresentTeethGroupedByContiguity();
 		let pockets = chartGraphPocketsRenderer_computePockets(this, graph, positions, teethGroups);
 		for (let pocket of pockets)
 			chartGraphPocketsRenderer_renderPocket(this, graph, context, pocket);
 	}
-}
-
-function chartGraphPocketsRenderer_getTeethGroups(graph) {
-	let groups = [[]];
-	for (let tooth of graph._teeth) {
-		if (!graph.isToothMissing(tooth)) {
-			groups[groups.length - 1].push(tooth);
-		} else if (groups[groups.length - 1].length > 0) {
-			groups.push([]);
-		}
-	}
-
-	if (groups[groups.length - 1].length < 1) {
-		groups.splice( groups.length - 1);
-	}
-	return groups;
 }
 
 function chartGraphPocketsRenderer_computePockets(renderer, graph, positions, teethGroups) {
@@ -68,7 +52,7 @@ function chartGraphPocketsRenderer_computePockets(renderer, graph, positions, te
 		let buccalGroup = [];
 		let lingualGroup = [];
 		for (let tooth of group) {
-			let abscissas = chartGraphPocketsRenderer_getChartSitesAbscissas(graph, tooth, positions.teethBoxes);
+			let abscissas = graph.getChartSitesAbscissas(tooth, positions.teethBoxes);
 			let newBuccalPocketPoints = chartGraphPocketsRenderer_getBucalPocketPoints(renderer, graph, positions, tooth, abscissas);
 			buccalGroup.push(...newBuccalPocketPoints);
 			let newLingualPocketPoints = chartGraphPocketsRenderer_getLingualPocketPoints(renderer, graph, positions, tooth, abscissas);
@@ -79,19 +63,6 @@ function chartGraphPocketsRenderer_computePockets(renderer, graph, positions, te
 	}
 
 	return result;
-}
-
-function chartGraphPocketsRenderer_getChartSitesAbscissas(graph, tooth, teethBoxes) {
-	const WIDTH_RATIO = 0.8;
-	let index = graph._teeth.indexOf(tooth);
-	let toothBox = teethBoxes[index];
-	let gap = toothBox.width * (1 - WIDTH_RATIO) / 2;
-
-	return [
-		toothBox.x + gap,
-		toothBox.x + toothBox.width / 2,
-		toothBox.x + toothBox.width - gap,
-	];
 }
 
 function chartGraphPocketsRenderer_getBucalPocketPoints(renderer, graph, positions, tooth, abscissas) {
@@ -120,8 +91,8 @@ function chartGraphPocketsRenderer_convertChartSiteToPocketPoint(renderer, graph
 	let attachmentLevel = probingDepth - gingivalMargin;
 
 	return {
-		gingivalMargin: graph.convertMillimeterOrdinate(graph, positions, isTopRow, -gingivalMargin),
-		attachmentLevel: graph.convertMillimeterOrdinate(graph, positions, isTopRow, attachmentLevel),
+		gingivalMargin: graph.convertMillimeterOrdinate(positions, isTopRow, -gingivalMargin),
+		attachmentLevel: graph.convertMillimeterOrdinate(positions, isTopRow, attachmentLevel),
 		x: abscissa,
 	}
 }

@@ -1,6 +1,6 @@
 import * as ChartTable from './chart_table.mjs';
 import { ChartGraph, JAW } from './chart_graph.mjs';
-import { ChartGraphPocketsRenderer } from './chart_graph_pockets_render.mjs';
+import { ChartGraphPocketsRenderer } from './chart_graph_pockets_renderer.mjs';
 import * as ToothNumbers from './tooth_numbers.mjs';
 import * as ProbingDepth from './probing_depth.mjs';
 
