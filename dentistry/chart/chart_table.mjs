@@ -9,9 +9,9 @@ const BUCCO_LINGUAL_POSITION = {
 };
 
 export function populateTables(tables, onToothNumberCellClick, onGingivalMarginChange, onProbingDepthChange, onBleedingOnProbingCheck, onPlaqueCheck) {
-	createToothNumberRowsForUpperJaw(tables, onToothNumberCellClick);
+	createToothNumberRowsAppearingOnTopOfTheTable(tables, onToothNumberCellClick);
 	createStatementRows(tables, onGingivalMarginChange, onProbingDepthChange, onBleedingOnProbingCheck, onPlaqueCheck);
-	createToothNumberRowsForLowerJaw(tables, onToothNumberCellClick);
+	createToothNumberRowsAppearingAtTheBottomOfTheTable(tables, onToothNumberCellClick);
 }
 
 function addToothNumberRowToTable(table, numbersIterator, onToothNumberCellClick) {
@@ -25,14 +25,35 @@ function addToothNumberRowToTableWithLeadingEmptyCell(table, numbersIterator, on
 	Element.from(table).add(row);
 };
 
-function createToothNumberRowsForUpperJaw(tables, onToothNumberCellClick) {
-	addToothNumberRowToTableWithLeadingEmptyCell(tables.upper.buccal.right, ToothNumbers.iterateUpperRightQuadrant(), onToothNumberCellClick);
-	addToothNumberRowToTable(tables.upper.buccal.left,  ToothNumbers.iterateUpperLeftQuadrant(), onToothNumberCellClick);
+function createToothNumberRowsAppearingOnTopOfTheTable(tables, onToothNumberCellClick) {
+	createToothNumberRowsForUpperJawBuccalSide(tables, onToothNumberCellClick);
+	createToothNumberRowsForLowerJawLingualSide(tables, onToothNumberCellClick);
 }
 
-function createToothNumberRowsForLowerJaw(tables, onToothNumberCellClick) {
-	addToothNumberRowToTableWithLeadingEmptyCell(tables.lower.buccal.right, ToothNumbers.iterateLowerRightQuadrant(), onToothNumberCellClick);
-	addToothNumberRowToTable(tables.lower.buccal.left,  ToothNumbers.iterateLowerLeftQuadrant(), onToothNumberCellClick);
+function createToothNumberRowsAppearingAtTheBottomOfTheTable(tables, onToothNumberCellClick) {
+	createToothNumberRowsForUpperJawLingualSide(tables, onToothNumberCellClick);
+	createToothNumberRowsForLowerJawBuccalSide(tables, onToothNumberCellClick);
+}
+
+function createToothNumberRowsForUpperJawBuccalSide(tables, onToothNumberCellClick) {
+	createToothNumberRowsUsingIterator(tables.upper.buccal, ToothNumbers.iterateUpperRightQuadrant(), ToothNumbers.iterateUpperLeftQuadrant(), onToothNumberCellClick);
+}
+
+function createToothNumberRowsForUpperJawLingualSide(tables, onToothNumberCellClick) {
+	createToothNumberRowsUsingIterator(tables.upper.lingual, ToothNumbers.iterateUpperRightQuadrant(), ToothNumbers.iterateUpperLeftQuadrant(), onToothNumberCellClick);
+}
+
+function createToothNumberRowsForLowerJawBuccalSide(tables, onToothNumberCellClick) {
+	createToothNumberRowsUsingIterator(tables.lower.buccal, ToothNumbers.iterateLowerRightQuadrant(), ToothNumbers.iterateLowerLeftQuadrant(), onToothNumberCellClick);
+}
+
+function createToothNumberRowsForLowerJawLingualSide(tables, onToothNumberCellClick) {
+	createToothNumberRowsUsingIterator(tables.lower.lingual, ToothNumbers.iterateLowerRightQuadrant(), ToothNumbers.iterateLowerLeftQuadrant(), onToothNumberCellClick);
+}
+
+function createToothNumberRowsUsingIterator(targetTables, rightIterator, leftIterator, onToothNumberCellClick) {
+	addToothNumberRowToTableWithLeadingEmptyCell(targetTables.right, rightIterator, onToothNumberCellClick);
+	addToothNumberRowToTable(targetTables.left, leftIterator, onToothNumberCellClick);
 }
 
 function createToothNumberRow(toothNumberIterator, onToothNumberCellClick) {
@@ -188,10 +209,10 @@ function createToothSiteId(id_prefix, toothNumber, position, buccoLingualPositio
 
 function createCheckboxWithInput(id_prefix, toothNumber, position, buccoLingualPosition, onInputCheck) {
 	let id = createToothSiteId(id_prefix, toothNumber, position, buccoLingualPosition);
-    let checkbox = Element.create('input').id(id).type('checkbox').build();
-    checkbox.addEventListener('change', onInputCheck);
+	let checkbox = Element.create('input').id(id).type('checkbox').build();
+	checkbox.addEventListener('change', onInputCheck);
 	return Element.create('div').add([
-        checkbox,
+		checkbox,
 		Element.create('label').htmlFor(id)
 	]);
 }
