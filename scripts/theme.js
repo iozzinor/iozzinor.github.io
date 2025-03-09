@@ -25,6 +25,11 @@
 		return 'system-default';
 	}
 
+	function addClassToRoot(theme)
+	{
+		document.documentElement.classList.add(`theme-${theme}`);
+	}
+
 	function insertThemePanel(currentTheme)
 	{
 		let themePanel = document.createElement('div');
@@ -70,6 +75,7 @@
 
 	let url = new URL(window.location.href);
 	let currentTheme = detectTheme();
+	addClassToRoot(currentTheme);
 	insertThemePanel(currentTheme);
 }(window.Theme = window.Theme || {}));
 

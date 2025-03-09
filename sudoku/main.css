@@ -1,0 +1,39 @@
+:root {
+	--guess-color: #aaa;
+}
+
+:root.theme-dark {
+	--guess-color: #ccc;
+}
+
+#board, .square {
+	display: grid;
+	grid-template-columns: repeat(3,1fr);
+	aspect-ratio: 1;
+}
+
+#board {
+	max-width: 80vmin;
+	row-gap: 3px;
+	column-gap: 3px;
+	border: solid 4px var(--color);
+	background-color: var(--color);
+}
+
+.cell {
+	aspect-ratio: 1;
+	font-size: 5vmin;
+	line-height: 8vmin;
+	background-color: var(--background-color);
+	margin: 1px;
+	text-align: center;
+}
+
+.cell.puzzle {
+	font-weight: bold;
+}
+
+.cell.guess {
+	font-weight: lighter;
+	color: var(--guess-color);
+}
