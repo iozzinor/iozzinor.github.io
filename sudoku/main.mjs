@@ -1,6 +1,6 @@
 import * as Grid from '/sudoku/grid.mjs';
 
-let randomGrid = new Grid.Grid();
+let randomGrid = new Grid.Grid(Grid.Difficulty.EASY);
 
 let board = document.getElementById('board');
 populateBoard(board);
