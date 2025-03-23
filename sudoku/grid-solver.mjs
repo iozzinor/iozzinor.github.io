@@ -69,11 +69,11 @@ function extractSolutionFromMatrixRows(puzzleDigits, allMatrixRows, solutionRowI
 
 export function gridAllComponentsAreSolution(digits, componentChecker) {
 	for (let i = 0; i < 9; ++i) {
-		if (!componentChecker(getSquareDigits(digits, i)))
+		if (!componentChecker(iterateSquares(digits, i)))
 			return false;
-		if (!componentChecker(getRowDigits(digits, i)))
+		if (!componentChecker(iterateRows(digits, i)))
 			return false;
-		if (!componentChecker(getColumnDigits(digits, i)))
+		if (!componentChecker(iterateColumns(digits, i)))
 			return false;
 	}
 	return true;
@@ -96,7 +96,7 @@ function getDigitsCounts(digits) {
 	return counts;
 }
 
-export function *getSquareDigits(digits, squareIndex) {
+export function *iterateSquares(digits, squareIndex) {
 	let squareX = squareIndex % 3;
 	let squareY = Math.floor(squareIndex / 3);
 	for (let innerY = 0; innerY < 3; ++innerY) {
@@ -108,12 +108,12 @@ export function *getSquareDigits(digits, squareIndex) {
 	}
 }
 
-export function *getRowDigits(digits, rowIndex) {
+export function *iterateRows(digits, rowIndex) {
 	for (let x = 0; x < 9; ++x)
 		yield digits[x + rowIndex * 9];
 }
 
-export function *getColumnDigits(digits, columnIndex) {
+export function *iterateColumns(digits, columnIndex) {
 	for (let y = 0; y < 9; ++y)
 		yield digits[columnIndex + y * 9];
 }
@@ -129,8 +129,8 @@ export function canPlayDigitAt(digits, i, digit) {
 	let row = Math.floor(i / 9);
 	let column = i % 9;
 	let square = Math.floor(column / 3) + Math.floor(row / 3) * 3;
-	return digitIsNotIn(getRowDigits(digits, row), digit)
-		&& digitIsNotIn(getColumnDigits(digits, column), digit)
-		&& digitIsNotIn(getSquareDigits(digits, square), digit);
+	return digitIsNotIn(iterateRows(digits, row), digit)
+		&& digitIsNotIn(iterateColumns(digits, column), digit)
+		&& digitIsNotIn(iterateSquares(digits, square), digit);
 };
 

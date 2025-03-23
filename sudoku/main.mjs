@@ -1,10 +1,28 @@
 import * as Grid from '/sudoku/grid.mjs';
+import * as GridSession from '/sudoku/grid-session.mjs';
 
-let randomGrid = new Grid.Grid(Grid.Difficulty.EASY);
+main();
 
-let board = document.getElementById('board');
-populateBoard(board);
-refreshCells(randomGrid);
+function main() {
+	let session = new GridSession.GridSession();
+	let grid = sessionGetGrid(session);
+
+	let board = document.getElementById('board');
+	populateBoard(board);
+	refreshCells(board, grid);
+}
+
+function sessionGetGrid(session) {
+	if (session.cells() != null)
+		return new Grid.Grid(session.cells());
+	else {
+		let randomGrid = Grid.Grid.randomWithDifficulty(Grid.Difficulty.EASY);
+		session.setElapsedSeconds(0);
+		session.setCells(randomGrid.cells());
+		session.save();
+		return randomGrid;
+	}
+}
 
 function populateBoard(board) {
 	for (let i = 0; i < 9; ++i) {
@@ -24,15 +42,15 @@ function populateBoard_createSquare() {
 	return square;
 }
 
-function refreshCells(grid) {
+function refreshCells(board, grid) {
 	let squares = Array.from(board.querySelectorAll('.square'));
 	for (let [squareIndex, square] of Object.entries(squares)) {
 		squareIndex = parseInt(squareIndex);
 		let cells = Array.from(square.querySelectorAll('.cell'));
-		let squareDigits = Array.from(grid.square(squareIndex));
+		let squareCells = Array.from(grid.square(squareIndex));
 
 		for (let i = 0; i < cells.length; ++i) {
-			let digit = squareDigits[i];
+			let digit = squareCells[i].digit;
 			if (digit == 0)
 				cells[i].classList.add('guess');
 			else {

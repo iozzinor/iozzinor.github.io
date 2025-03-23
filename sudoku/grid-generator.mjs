@@ -14,6 +14,16 @@ Object.defineProperty(Difficulty, 'MEDIUM', { value: 1, writable: false, enumera
 Object.defineProperty(Difficulty, 'HARD', { value: 2, writable: false, enumeratable: true });
 Object.freeze(Difficulty);
 
+function Difficulty_getNumberOfDigitsToRemove(difficulty) {
+	let lookup = {};
+	lookup[Difficulty.EASY] = 30;
+	lookup[Difficulty.MEDIUM] = 40;
+	lookup[Difficulty.HARD] = 56;
+	if (!(difficulty in lookup))
+		throw new Error(`unsupported difficulty ${difficulty}`);
+	return lookup[difficulty];
+}
+
 const DEFAULT_GENERATE_MAX_ATTEMPTS = 1_000;
 const DEFAULT_REMOVE_MAX_ATTEMPTS = 200;
 
@@ -92,6 +102,13 @@ function gridRemoveDigits(fullDigits, numberOfDigitsToRemove) {
 }
 
 function tryToRemoveDigits(fullDigits, numberOfDigitsToRemove, maxAttemptsPerDigit) {
+	let digits = tryToRemoveDigits_getDigits(fullDigits, numberOfDigitsToRemove, maxAttemptsPerDigit);
+	for (let i = 0; i < digits.length; ++i)
+		digits[i] = digits[i] > 0 ? digits[i] : (fullDigits[i] << 4);
+	return digits;
+}
+
+function tryToRemoveDigits_getDigits(fullDigits, numberOfDigitsToRemove, maxAttemptsPerDigit) {
 	const hasUniqueSolution = (digits) => {
 		return GridSolver.solve(digits).length == 1;
 	};
@@ -121,16 +138,6 @@ function tryToRemoveDigits(fullDigits, numberOfDigitsToRemove, maxAttemptsPerDig
 		}
 	}
 	return digits;
-}
-
-function Difficulty_getNumberOfDigitsToRemove(difficulty) {
-	let lookup = {};
-	lookup[Difficulty.EASY] = 30;
-	lookup[Difficulty.MEDIUM] = 40;
-	lookup[Difficulty.HARD] = 56;
-	if (!(difficulty in lookup))
-		throw new Error(`unsupported difficulty ${difficulty}`);
-	return lookup[difficulty];
 }
 
 function shuffleArray(array) {
