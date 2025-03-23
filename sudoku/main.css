@@ -64,7 +64,7 @@ main {
 	position: relative;
 	aspect-ratio: 1;
 	font-size: 5vmin;
-	line-height: 7vmin;
+	line-height: 8vmin;
 	background-color: var(--background-color);
 	text-align: center;
 }
@@ -153,7 +153,8 @@ input[type=radio][name="play-mode"] + label:hover {
 	margin-right: auto;
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
-	column-gap: 1rem;
+	column-gap: 2vmin;
+	row-gap: 2vmin;
 	width: 100%;
 }
 
@@ -161,6 +162,9 @@ input[type=radio][name="play-mode"] + label:hover {
 #play-hint-container input[type=checkbox] {
 	-webkit-appearance: none;
 	outline: none;
+	width: auto;
+	height: 4rem;
+	line-height: 2rem;
 }
 
 #play-guess-container input[type=checkbox]::after,
@@ -187,4 +191,10 @@ input[type=radio][name="play-mode"] + label:hover {
 
 #new-grid {
 	margin-top: auto;
+}
+
+@media(max-aspect-ratio: 1) {
+	#new-grid {
+		margin-top: 4vmin;
+	}
 }
