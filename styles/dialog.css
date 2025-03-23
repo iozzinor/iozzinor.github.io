@@ -1,0 +1,14 @@
+dialog {
+	color: var(--color);
+	background-color: var(--background-color);
+	border: none;
+	border-radius: 1rem;
+	box-shadow: 1px 1px 1px 1px var(--dialog-box-shadow-color);
+}
+
+dialog .toolbox {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+

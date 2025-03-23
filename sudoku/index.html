@@ -4,6 +4,7 @@
 		<meta charset="utf-8"/>
 		<title>Sudoku</title>
 		<link rel="stylesheet" href="/styles/main.css"/>
+		<link rel="stylesheet" href="/styles/dialog.css"/>
 		<link rel="stylesheet" href="/sudoku/main.css"/>
 		<script src="/scripts/theme.js" defer></script>
 		<script src="/sudoku/main.mjs" type="module"></script>
@@ -51,5 +52,21 @@
 				<button id="new-grid">New Grid</button>
 			</div>
 		</main>
+		<dialog id="new-grid-dialog">
+			<form>
+				<h1>New Grid</h1>
+				<p>Do you want to create a new grid? Current progress will be lost.</p>
+				<label for="difficulty">Grid difficulty</label>
+				<select id="difficulty">
+					<option value="easy">Easy</option>
+					<option value="medium">Medium</option>
+					<option value="hard">Hard</option>
+				</select>
+				<div class="toolbox">
+					<button formmethod="dialog" value="ok">Yes</button>
+					<button formmethod="dialog" value="cancel">No</button>
+				</div>
+			</form>
+		</dialog>
 	</body>
 </html>

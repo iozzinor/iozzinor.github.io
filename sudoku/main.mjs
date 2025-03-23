@@ -25,11 +25,11 @@ function sessionGetGrid(session) {
 	if (session.cells() != null)
 		return new Grid.Grid(session.cells());
 	else
-		return sessionGenerateRandomGrid(session);
+		return sessionGenerateRandomGrid(session, Grid.Difficulty.EASY);
 }
 
-function sessionGenerateRandomGrid(session) {
-	let randomGrid = Grid.Grid.randomWithDifficulty(Grid.Difficulty.EASY);
+function sessionGenerateRandomGrid(session, difficulty) {
+	let randomGrid = Grid.Grid.randomWithDifficulty(difficulty);
 	session.setElapsedSeconds(0);
 	session.setCells(randomGrid.cells());
 	session.save();
@@ -301,22 +301,39 @@ function onHintCheckboxClicked(session, board, grid, container, selectedCellInde
 }
 
 function setupNewGrid(board, session, grid, clock) {
+	const newGridDialog = document.getElementById('new-grid-dialog');
+	const difficulties = {
+		easy: Grid.Difficulty.EASY,
+		medium: Grid.Difficulty.MEDIUM,
+		hard: Grid.Difficulty.HARD,
+	};
 	document.getElementById('new-grid').addEventListener('click', () => {
-		if (confirm('Do you want to play a new grid?')) {
-			let newGrid = sessionGenerateRandomGrid(session);
-			stopClockInterval();
-			startClockInterval(session, clock);
-
-			grid.setCells(newGrid.cells());
-			refreshCells(board, grid);
-			selectedCellIndex = null;
-			let customEvent = new CustomEvent('cell-selection-change', {
-				detail: { selectedCellIndex }
-			});
-			board.dispatchEvent(customEvent);
-			let previous = board.querySelector('.cell.selected');
-			if (previous != null)
-				previous.classList.remove('selected');
-		}
+		newGridDialog.returnValue = '';
+		newGridDialog.showModal();
 	});
+
+
+	newGridDialog.addEventListener('close', event => {
+		let difficulty = difficulties[document.getElementById('difficulty').value];
+
+		if (newGridDialog.returnValue == 'ok')
+			onNewGridConfirm(board, session, grid, clock, difficulty);
+	});
+}
+
+function onNewGridConfirm(board, session, grid, clock, difficulty) {
+	let newGrid = sessionGenerateRandomGrid(session, difficulty);
+	stopClockInterval();
+	startClockInterval(session, clock);
+
+	grid.setCells(newGrid.cells());
+	refreshCells(board, grid);
+	selectedCellIndex = null;
+	let customEvent = new CustomEvent('cell-selection-change', {
+		detail: { selectedCellIndex }
+	});
+	board.dispatchEvent(customEvent);
+	let previous = board.querySelector('.cell.selected');
+	if (previous != null)
+		previous.classList.remove('selected');
 }

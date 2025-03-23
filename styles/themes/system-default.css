@@ -4,6 +4,7 @@
 	{
 		--background-color: #111;
 		--color: #EEE;
+		--dialog-box-shadow-color: rgba(180, 180, 180, 0.2);
 		--even-background-color: #0A0A0A;
 		--code-background-color: rgba(240,240,240,0.15);
 		--code-constant-color: #33F;
