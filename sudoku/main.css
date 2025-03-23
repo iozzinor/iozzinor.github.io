@@ -27,7 +27,7 @@ main {
 }
 
 #board-container {
-	min-width: 80vmin;
+	min-width: calc(80vmin - 24px);
 }
 
 #play-panel {
@@ -44,25 +44,28 @@ main {
 
 #board, .square, .hints {
 	display: grid;
-	grid-template-columns: repeat(3,1fr);
+	grid-template-columns: repeat(3, 1fr);
 	aspect-ratio: 1;
 }
 
 #board {
-	max-width: 80vmin;
 	row-gap: 3px;
 	column-gap: 3px;
 	border: solid 4px var(--color);
 	background-color: var(--color);
 }
 
+.square {
+	row-gap: 1px;
+	column-gap: 1px;
+}
+
 .cell {
 	position: relative;
 	aspect-ratio: 1;
 	font-size: 5vmin;
-	line-height: 8vmin;
+	line-height: 7vmin;
 	background-color: var(--background-color);
-	margin: 1px;
 	text-align: center;
 }
 
