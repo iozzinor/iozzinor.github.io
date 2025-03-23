@@ -29,20 +29,30 @@ function sessionGetGrid(session) {
 
 function populateBoard(board) {
 	for (let i = 0; i < 9; ++i) {
-		let square = populateBoard_createSquare();
+		let square = populateBoard_createSquare(i);
 		board.appendChild(square);
 	}
 }
 
-function populateBoard_createSquare() {
+function populateBoard_createSquare(squareIndex) {
 	let square = document.createElement('div');
 	square.className = 'square';
 	for (let i = 0; i < 9; ++i) {
 		let cell = document.createElement('p');
 		cell.className = 'cell';
+		cell.addEventListener('click', onCellClicked);
+
+		let coordinates = Grid.CellCoordinates.fromSquare(squareIndex, i);
+		cell.dataset.flatIndex = coordinates.flatIndex();
+
 		square.appendChild(cell)
 	}
 	return square;
+}
+
+function onCellClicked(event) {
+	let cell = event.target.closest('.cell');
+	console.log(cell.dataset.flatIndex);
 }
 
 function refreshCells(board, grid) {

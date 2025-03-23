@@ -2,6 +2,35 @@ import * as GridGenerator from '/sudoku/grid-generator.mjs';
 import * as GridSolver from '/sudoku/grid-solver.mjs';
 export { Difficulty } from '/sudoku/grid-generator.mjs';
 
+export class CellCoordinates {
+	#i;
+
+	static fromSquare(squareIndex, innerSquareIndex) {
+		let squareX = squareIndex % 3;
+		let squareY = parseInt(squareIndex / 3);
+		let innerSquareX = innerSquareIndex % 3;
+		let innerSquareY = parseInt(innerSquareIndex / 3);
+		let x = squareX * 3 + innerSquareX;
+		let y = squareY * 3 + innerSquareY;
+		return new this(x + y * 9);
+	}
+
+	constructor(i) {
+		console.assert(i > -1 && i < 81);
+		this.#i = i;
+	}
+
+	flatIndex()         { return this.#i; }
+	x()                 { return this.#i % 9; }
+	y()                 { return parseInt(this.#i / 9); }
+	squareX()           { return parseInt(this.x() / 3); }
+	squareY()           { return parseInt(this.y() / 3); }
+	squareIndex()       { return this.squareX() + this.squareY() * 3; };
+	innerSquareX()      { return this.x() % 3; }
+	innerSquareY()      { return this.y() % 3; }
+	innerSquareIndex()  { return this.innerSquareX() + this.innerSquareY() * 3; };
+}
+
 export class Grid {
 	#cells;
 
@@ -93,4 +122,3 @@ function gridIsPartialSolution(cells) {
 function gridIsCompleteSolution(cells) {
 	return GridSolver.gridAllComponentsAreSolution(cells, GridSolver.digitsAreCompleteSolution);
 }
-
