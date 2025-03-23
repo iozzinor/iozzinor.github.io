@@ -8,8 +8,11 @@ function main() {
 	let grid = sessionGetGrid(session);
 
 	let board = document.getElementById('board');
+	let clock = document.getElementById('clock');
+
 	populateBoard(board);
 	refreshCells(board, grid);
+	startClockInterval(session, clock);
 }
 
 function sessionGetGrid(session) {
@@ -59,4 +62,41 @@ function refreshCells(board, grid) {
 			}
 		}
 	}
+}
+
+function startClockInterval(session, clock) {
+	onClockIntervalFire._startElapsedSeconds = session.elapsedSeconds();
+	onClockIntervalFire._startTimestamp = window.performance.now();
+	onClockIntervalFire._clock = clock;
+	onClockIntervalFire._session = session;
+	refreshClockLabel(clock, session.elapsedSeconds());
+	setInterval(onClockIntervalFire, 1_000);
+}
+
+function onClockIntervalFire() {
+	let elapsedMillis = window.performance.now() - onClockIntervalFire._startTimestamp;
+	let newElapsedSeconds = onClockIntervalFire._startElapsedSeconds + elapsedMillis / 1_000.0;
+	onClockIntervalFire._session.setElapsedSeconds(newElapsedSeconds);
+	refreshClockLabel(clock, onClockIntervalFire._session.elapsedSeconds());
+
+	onClockIntervalFire._session.saveElapsedSeconds();
+}
+
+function refreshClockLabel(clock, elapsedSeconds) {
+	elapsedSeconds = parseInt(elapsedSeconds);
+	let seconds = elapsedSeconds % 60;
+	let minutes = parseInt(elapsedSeconds / 60);
+	let hours = parseInt(elapsedSeconds / 3600);
+	clock.textContent = formatClockLabelTimeComponents(hours, minutes, seconds);
+}
+
+function formatClockLabelTimeComponents(hours, minutes, seconds) {
+	const padTimeComponent = (component) => component.toString().padStart(2, '0');
+	let components = [];
+	if (hours > 0)
+		components.push(hours);
+	if (hours > 0 || minutes > 0)
+		components.push(minutes);
+	components.push(seconds);
+	return components.map(padTimeComponent).join(':');
 }

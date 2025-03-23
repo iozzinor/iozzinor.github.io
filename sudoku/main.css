@@ -6,6 +6,10 @@
 	--guess-color: #ccc;
 }
 
+#clock {
+	font-size: 2rem;
+}
+
 #board, .square {
 	display: grid;
 	grid-template-columns: repeat(3,1fr);
