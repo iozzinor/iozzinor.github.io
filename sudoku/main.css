@@ -6,7 +6,32 @@
 	--guess-color: #ccc;
 }
 
+.hidden { display: none !important; }
+
+main {
+	margin-top: 1rem;
+	display: flex;
+	flex-direction: row;
+	column-gap: 2vw;
+}
+
+@media(max-aspect-ratio: 1) {
+	main {
+		flex-direction: column;
+		row-gap: 2vh;
+	}
+}
+
+#board-container {
+	min-width: 80vmin;
+}
+
+#play-panel {
+	flex: auto;
+}
+
 #clock {
+	margin: 0;
 	font-size: 2rem;
 }
 
@@ -40,4 +65,80 @@
 .cell.guess {
 	font-weight: lighter;
 	color: var(--guess-color);
+}
+
+.cell.selected {
+	background-color: var(--contrast-color);
+}
+
+#play-mode {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	margin-bottom: 2vh;
+}
+
+input[type=radio][name="play-mode"] {
+	display: none;
+}
+
+input[type=radio][name="play-mode"] + label {
+	padding: 0.5rem 1rem;
+	border: 1px solid var(--contrast-color);
+}
+
+input[type=radio][name="play-mode"] + label:first-of-type {
+	border-top-left-radius: 1rem;
+	border-bottom-left-radius: 1rem;
+}
+
+input[type=radio][name="play-mode"] + label:last-of-type {
+	border-top-right-radius: 1rem;
+	border-bottom-right-radius: 1rem;
+}
+
+input[type=radio][name="play-mode"]:checked + label {
+	background-color: var(--contrast-color);
+	color: var(--background-color);
+}
+
+input[type=radio][name="play-mode"] + label:hover {
+	background-color: var(--contrast-color);
+}
+
+#play-guess-container,
+#play-hint-container {
+	margin-left: auto;
+	margin-right: auto;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	column-gap: 1rem;
+}
+
+#play-guess-container input[type=checkbox],
+#play-hint-container input[type=checkbox] {
+	-webkit-appearance: none;
+	outline: none;
+}
+
+#play-guess-container input[type=checkbox]::after,
+#play-hint-container input[type=checkbox]::after {
+	display: block;
+	content: attr(data-digit);
+	text-align: center;
+	font-size: 2rem;
+	padding: 1rem;
+	border: solid 1px var(--contrast-color);
+	border-radius: 1rem;
+}
+
+#play-guess-container input[type=checkbox]:checked::after,
+#play-hint-container input[type=checkbox]:checked::after {
+	background-color: var(--contrast-color);
+	color: var(--background-color);
+}
+
+#play-guess-container input[type=checkbox]:hover::after,
+#play-hint-container input[type=checkbox]:hover::after {
+	background-color: var(--contrast-color);
 }

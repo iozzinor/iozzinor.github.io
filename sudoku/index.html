@@ -18,6 +18,37 @@
 				<p id="clock">--:--:--</p>
 				<div id="board"></div>
 			</div>
+			<div id="play-panel">
+				<div id="play-mode">
+					<input id="play-mode-guess" type="radio" name="play-mode" value="guess" checked />
+					<label for="play-mode-guess">Guess</label>
+					<input id="play-mode-hint" type="radio" name="play-mode" value="hint" />
+					<label for="play-mode-hint">Hint</label>
+				</div>
+				<div id="play-guess-container" class="hidden">
+					<input id="guess-1" type="checkbox" data-digit="1"/>
+					<input id="guess-2" type="checkbox" data-digit="2"/>
+					<input id="guess-3" type="checkbox" data-digit="3"/>
+					<input id="guess-4" type="checkbox" data-digit="4"/>
+					<input id="guess-5" type="checkbox" data-digit="5"/>
+					<input id="guess-6" type="checkbox" data-digit="6"/>
+					<input id="guess-7" type="checkbox" data-digit="7"/>
+					<input id="guess-8" type="checkbox" data-digit="8"/>
+					<input id="guess-9" type="checkbox" data-digit="9"/>
+				</div>
+				<div id="play-hint-container" class="hidden">
+					<input id="hint-1" type="checkbox" data-digit="1"/>
+					<input id="hint-2" type="checkbox" data-digit="2"/>
+					<input id="hint-3" type="checkbox" data-digit="3"/>
+					<input id="hint-4" type="checkbox" data-digit="4"/>
+					<input id="hint-5" type="checkbox" data-digit="5"/>
+					<input id="hint-6" type="checkbox" data-digit="6"/>
+					<input id="hint-7" type="checkbox" data-digit="7"/>
+					<input id="hint-8" type="checkbox" data-digit="8"/>
+					<input id="hint-9" type="checkbox" data-digit="9"/>
+				</div>
+				<p id="play-no-selected-cells">Not applicable.</p>
+			</div>
 		</main>
 	</body>
 </html>

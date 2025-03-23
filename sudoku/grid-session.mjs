@@ -27,11 +27,15 @@ export class GridSession {
 
 	save() {
 		this.saveElapsedSeconds();
-		storeCells(this.#store, this.#cells);
+		this.saveCells();
 	}
 
 	saveElapsedSeconds() {
 		storeElapsedSeconds(this.#store, this.#elapsedSeconds);
+	}
+
+	saveCells() {
+		storeCells(this.#store, this.#cells);
 	}
 }
 
