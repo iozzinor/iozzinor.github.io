@@ -1,5 +1,6 @@
 :root {
 	--guess-color: #aaa;
+	--hint-color: blue;
 }
 
 :root.theme-dark {
@@ -35,7 +36,7 @@ main {
 	font-size: 2rem;
 }
 
-#board, .square {
+#board, .square, .hints {
 	display: grid;
 	grid-template-columns: repeat(3,1fr);
 	aspect-ratio: 1;
@@ -50,6 +51,7 @@ main {
 }
 
 .cell {
+	position: relative;
 	aspect-ratio: 1;
 	font-size: 5vmin;
 	line-height: 8vmin;
@@ -67,8 +69,37 @@ main {
 	color: var(--guess-color);
 }
 
+.cell.guess:after {
+	content: attr(data-digit);
+}
+
 .cell.selected {
 	background-color: var(--contrast-color);
+}
+
+.hints {
+	display: none;
+	position: absolute;
+	top: 0.1rem;
+	right: 0.1rem;
+	line-height: 0.8rem;
+	font-size: 0.8rem;
+	row-gap: 0.2rem;
+	column-gap: 0.2rem;
+}
+
+.cell.guess[data-digit=""] .hints {
+	display: grid;
+}
+
+.hints p {
+	margin: 0;
+	color: transparent;
+	font-weight: normal;
+}
+
+.hints p.selected {
+	color: var(--hint-color);
 }
 
 #play-mode {

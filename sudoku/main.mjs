@@ -41,9 +41,10 @@ function populateBoard_createSquare(squareIndex, onCellClickedEventListener) {
 	let square = document.createElement('div');
 	square.className = 'square';
 	for (let i = 0; i < 9; ++i) {
-		let cell = document.createElement('p');
+		let cell = document.createElement('div');
 		cell.className = 'cell';
 		cell.addEventListener('click', onCellClickedEventListener);
+		cell.appendChild(populateBoard_createHints());
 
 		let coordinates = Grid.CellCoordinates.fromSquare(squareIndex, i);
 		cell.dataset.flatIndex = coordinates.flatIndex();
@@ -51,6 +52,18 @@ function populateBoard_createSquare(squareIndex, onCellClickedEventListener) {
 		square.appendChild(cell)
 	}
 	return square;
+}
+
+function populateBoard_createHints() {
+	let hints = document.createElement('div');
+	hints.className = 'hints';
+	for (let d = 1; d < 10; ++d) {
+		let paragraph = document.createElement('p');
+		paragraph.appendChild(document.createTextNode(d));
+		paragraph.dataset.bitIndex = d - 1;
+		hints.appendChild(paragraph);
+	}
+	return hints;
 }
 
 function onCellClicked(board, event) {
@@ -79,14 +92,23 @@ function refreshCells(board, grid) {
 		let squareCells = Array.from(grid.square(squareIndex));
 
 		for (let i = 0; i < cells.length; ++i) {
-			let digit = squareCells[i].digit;
-			let isPuzzle = squareCells[i].isPuzzle;
-			if (digit == 0 || !isPuzzle)
+			let cell = squareCells[i];
+			let digit = cell.digit;
+			let isPuzzle = cell.isPuzzle;
+			let hintsMask = cell.hintsMask;
+			if (digit == 0 || !isPuzzle) {
 				cells[i].classList.add('guess');
-			else
+				cells[i].dataset.digit = (digit == 0 ? '' : digit);
+				for (let bitIndex = 0; bitIndex < 9; ++bitIndex) {
+					let hasHint = ((hintsMask >> bitIndex) & 1) == 1;
+					let p = cells[i].querySelector(`.hints p[data-bit-index="${bitIndex}"]`);
+					if (hasHint)    p.classList.add('selected');
+					else            p.classList.remove('selected');
+				}
+			} else {
 				cells[i].classList.add('puzzle');
-			if (digit > 0)
 				cells[i].appendChild(document.createTextNode(digit));
+			}
 		}
 	}
 }
@@ -211,8 +233,8 @@ function onGuessCheckboxClicked(session, board, grid, container, selectedCellInd
 	cell.digit = newDigit;
 	session.setCells(grid.cells());
 	session.saveCells();
-	board.querySelector(`.cell[data-flat-index="${selectedCellIndex}"]`).textContent = (newDigit == 0 ? '' : newDigit.toString());
-
+	let cellElement = board.querySelector(`.cell[data-flat-index="${selectedCellIndex}"]`);
+	cellElement.dataset.digit = (newDigit == 0 ? '' : newDigit);
 	for (let guessCheckbox of container.querySelectorAll('input[type=checkbox]'))
 		guessCheckbox.checked = newDigit == guessCheckbox.dataset.digit;
 }
@@ -228,4 +250,8 @@ function onHintCheckboxClicked(session, board, grid, container, selectedCellInde
 		cell.hintsMask &= 0b111111111 & ~(1 << bitIndex);
 	session.setCells(grid.cells());
 	session.saveCells();
+	let cellElement = board.querySelector(`.cell[data-flat-index="${selectedCellIndex}"]`);
+	let p = cellElement.querySelector(`.hints p[data-bit-index="${bitIndex}"`);
+	if (isChecked)  p.classList.add('selected');
+	else            p.classList.remove('selected');
 }
