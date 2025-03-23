@@ -20,13 +20,16 @@ function main() {
 function sessionGetGrid(session) {
 	if (session.cells() != null)
 		return new Grid.Grid(session.cells());
-	else {
-		let randomGrid = Grid.Grid.randomWithDifficulty(Grid.Difficulty.EASY);
-		session.setElapsedSeconds(0);
-		session.setCells(randomGrid.cells());
-		session.save();
-		return randomGrid;
-	}
+	else
+		return sessionGenerateRandomGrid(session);
+}
+
+function sessionGenerateRandomGrid(session) {
+	let randomGrid = Grid.Grid.randomWithDifficulty(Grid.Difficulty.EASY);
+	session.setElapsedSeconds(0);
+	session.setCells(randomGrid.cells());
+	session.save();
+	return randomGrid;
 }
 
 function populateBoard(board) {
