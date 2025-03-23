@@ -15,6 +15,7 @@ function main() {
 	refreshCells(board, grid);
 	startClockInterval(session, clock);
 	setupPlayPanel(board, session, grid);
+	setupNewGrid(board, session, grid);
 }
 
 function sessionGetGrid(session) {
@@ -95,6 +96,9 @@ function refreshCells(board, grid) {
 		let squareCells = Array.from(grid.square(squareIndex));
 
 		for (let i = 0; i < cells.length; ++i) {
+			for (let classItem of ['guess', 'puzzle'])
+				cells[i].classList.remove(classItem);
+
 			let cell = squareCells[i];
 			let digit = cell.digit;
 			let isPuzzle = cell.isPuzzle;
@@ -110,7 +114,7 @@ function refreshCells(board, grid) {
 				}
 			} else {
 				cells[i].classList.add('puzzle');
-				cells[i].appendChild(document.createTextNode(digit));
+				cells[i].dataset.digit = (digit == 0 ? '' : digit);
 			}
 		}
 	}
@@ -147,8 +151,7 @@ function formatClockLabelTimeComponents(hours, minutes, seconds) {
 	let components = [];
 	if (hours > 0)
 		components.push(hours);
-	if (hours > 0 || minutes > 0)
-		components.push(minutes);
+	components.push(minutes);
 	components.push(seconds);
 	return components.map(padTimeComponent).join(':');
 }
@@ -257,4 +260,25 @@ function onHintCheckboxClicked(session, board, grid, container, selectedCellInde
 	let p = cellElement.querySelector(`.hints p[data-bit-index="${bitIndex}"`);
 	if (isChecked)  p.classList.add('selected');
 	else            p.classList.remove('selected');
+}
+
+function setupNewGrid(board, session, grid) {
+	document.getElementById('new-grid').addEventListener('click', () => {
+		if (confirm('Do you want to play a new grid?')) {
+			let newGrid = sessionGenerateRandomGrid(session);
+			onClockIntervalFire._startElapsedSeconds = session.elapsedSeconds();
+			onClockIntervalFire._startTimestamp = window.performance.now();
+
+			grid.setCells(newGrid.cells());
+			refreshCells(board, grid);
+			selectedCellIndex = null;
+			let customEvent = new CustomEvent('cell-selection-change', {
+				detail: { selectedCellIndex }
+			});
+			board.dispatchEvent(customEvent);
+			let previous = board.querySelector('.cell.selected');
+			if (previous != null)
+				previous.classList.remove('selected');
+		}
+	});
 }

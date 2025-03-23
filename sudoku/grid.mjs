@@ -80,6 +80,11 @@ export class Grid {
 		return this.#cells;
 	}
 
+	setCells(cells) {
+		console.assert(cells.length == 81);
+		this.#cells = Array.from(cells);
+	}
+
 	setCellAtIndex(i, digit) {
 		this.#cells[i] = digit;
 	}

@@ -22,7 +22,7 @@ export class GridSession {
 	}
 
 	setCells(cells) {
-		this.#cells = cells;
+		this.#cells = Array.from(cells);
 	}
 
 	save() {
