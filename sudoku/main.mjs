@@ -13,9 +13,12 @@ function main() {
 
 	populateBoard(board);
 	refreshCells(board, grid);
-	startClockInterval(session, clock);
-	setupPlayPanel(board, session, grid);
-	setupNewGrid(board, session, grid);
+	if (checkWin(grid))
+		onGameWon(session, clock);
+	else
+		startClockInterval(session, clock);
+	setupPlayPanel(board, session, grid, clock);
+	setupNewGrid(board, session, grid, clock);
 }
 
 function sessionGetGrid(session) {
@@ -126,7 +129,14 @@ function startClockInterval(session, clock) {
 	onClockIntervalFire._clock = clock;
 	onClockIntervalFire._session = session;
 	refreshClockLabel(clock, session.elapsedSeconds());
-	setInterval(onClockIntervalFire, 1_000);
+	onClockIntervalFire._intervalId = setInterval(onClockIntervalFire, 1_000);
+}
+
+function stopClockInterval() {
+	if (onClockIntervalFire._intervalId === undefined)
+		return;
+	clearInterval(onClockIntervalFire._intervalId);
+	delete onClockIntervalFire._intervalId;
 }
 
 function onClockIntervalFire() {
@@ -140,10 +150,15 @@ function onClockIntervalFire() {
 
 function refreshClockLabel(clock, elapsedSeconds) {
 	elapsedSeconds = parseInt(elapsedSeconds);
+	let label = formatClockLabelElapsedSeconds(elapsedSeconds);
+	clock.textContent = label;
+}
+
+function formatClockLabelElapsedSeconds(elapsedSeconds) {
 	let seconds = elapsedSeconds % 60;
 	let minutes = parseInt(elapsedSeconds / 60) % 60;
 	let hours = parseInt(elapsedSeconds / 3600);
-	clock.textContent = formatClockLabelTimeComponents(hours, minutes, seconds);
+	return formatClockLabelTimeComponents(hours, minutes, seconds);
 }
 
 function formatClockLabelTimeComponents(hours, minutes, seconds) {
@@ -156,7 +171,7 @@ function formatClockLabelTimeComponents(hours, minutes, seconds) {
 	return components.map(padTimeComponent).join(':');
 }
 
-function setupPlayPanel(board, session, grid) {
+function setupPlayPanel(board, session, grid, clock) {
 	const selectMode = (newMode) => {
 		let cell = (selectedCellIndex == null ? null : grid.cellAtIndex(selectedCellIndex));
 		let aPlayableCellIsSelected = (selectedCellIndex != null && !cell.isPuzzle);
@@ -215,6 +230,7 @@ function setupPlayPanel(board, session, grid) {
 				playModePanels['guess'],
 				selectedCellIndex,
 				parseInt(event.target.dataset.digit),
+				clock,
 			)
 		});
 	for (let hintCheckbox of playModePanels['hint'].querySelectorAll('input[type=checkbox]'))
@@ -231,7 +247,7 @@ function setupPlayPanel(board, session, grid) {
 		});
 }
 
-function onGuessCheckboxClicked(session, board, grid, container, selectedCellIndex, chosenDigit) {
+function onGuessCheckboxClicked(session, board, grid, container, selectedCellIndex, chosenDigit, clock) {
 	console.assert(selectedCellIndex != null);
 
 	let cell = grid.cellAtIndex(selectedCellIndex);
@@ -243,6 +259,28 @@ function onGuessCheckboxClicked(session, board, grid, container, selectedCellInd
 	cellElement.dataset.digit = (newDigit == 0 ? '' : newDigit);
 	for (let guessCheckbox of container.querySelectorAll('input[type=checkbox]'))
 		guessCheckbox.checked = newDigit == guessCheckbox.dataset.digit;
+
+	if (checkWin(grid))
+		onGameWon(session, clock);
+	else
+		onGamePending(session, clock);
+}
+
+function checkWin(grid) {
+	let won = grid.cells().every(cell => cell.isPuzzle || cell.solution == cell.digit);
+	return won;
+}
+
+function onGameWon(session, clock) {
+	stopClockInterval();
+	let formattedTime = formatClockLabelElapsedSeconds(parseInt(session.elapsedSeconds()));
+	clock.textContent = `You won in ${formattedTime}!`;
+}
+
+function onGamePending(session, clock) {
+	let clockIntervalNotFiring = (onClockIntervalFire._intervalId === undefined);
+	if (clockIntervalNotFiring)
+		startClockInterval(session, clock);
 }
 
 function onHintCheckboxClicked(session, board, grid, container, selectedCellIndex, chosenDigit, isChecked) {
@@ -262,12 +300,12 @@ function onHintCheckboxClicked(session, board, grid, container, selectedCellInde
 	else            p.classList.remove('selected');
 }
 
-function setupNewGrid(board, session, grid) {
+function setupNewGrid(board, session, grid, clock) {
 	document.getElementById('new-grid').addEventListener('click', () => {
 		if (confirm('Do you want to play a new grid?')) {
 			let newGrid = sessionGenerateRandomGrid(session);
-			onClockIntervalFire._startElapsedSeconds = session.elapsedSeconds();
-			onClockIntervalFire._startTimestamp = window.performance.now();
+			stopClockInterval();
+			startClockInterval(session, clock);
 
 			grid.setCells(newGrid.cells());
 			refreshCells(board, grid);
