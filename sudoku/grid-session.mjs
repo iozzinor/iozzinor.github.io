@@ -1,3 +1,5 @@
+import * as Base64 from '/scripts/base64.mjs';
+
 export class GridSession {
 	#store;
 	#elapsedSeconds;
@@ -53,7 +55,7 @@ function retrieveCells(store) {
 	let cellIntegersBase64 = store.getItem(KEY_CELLS);
 	if (cellIntegersBase64 == null)
 		return null;
-	let cellBytes = Uint8Array.fromBase64(cellIntegersBase64);
+	let cellBytes = fromBase64(cellIntegersBase64);
 	let cellIntegers = new Uint16Array(cellBytes.buffer);
 
 	console.assert(cellBytes.length == 162);
@@ -93,7 +95,7 @@ function storeCells(store, cells) {
 	let view = new Uint16Array(buffer);
 	for (const [i, cellInteger] of Object.entries(cellIntegers))
 		view[i] = cellInteger;
-	let cellsBase64 = (new Uint8Array(buffer)).toBase64();
+	let cellsBase64 = bufferToBase64(buffer);
 	store.setItem(KEY_CELLS, cellsBase64);
 }
 
@@ -111,4 +113,18 @@ function cellToCellInteger(cell) {
 		let integer = cell.digit * 10 + (cell.solution - 1);
 		return  (cell.hintsMask << 7) | integer;
 	}
+}
+
+function fromBase64(string) {
+	if (Uint8Array.fromBase64 !== undefined)
+		return Uint8Array.fromBase64(string);
+	else
+		return new Uint8Array(Base64.base64StringToBinary(string));
+}
+
+function bufferToBase64(buffer) {
+	if (Uint8Array.fromBase64 !== undefined)
+		return (new Uint8Array(buffer)).toBase64();
+	else
+		return Base64.binaryToBase64String(buffer);
 }
