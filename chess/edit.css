@@ -1,0 +1,57 @@
+:root {
+	--selection-color: orange;
+}
+
+#panel {
+	display: flex;
+	flex-direction: column;
+}
+
+#fen {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+
+#piece-selection {
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+}
+
+:root.theme-dark #piece-selection {
+	color: black;
+	background-color: lightgray;
+}
+
+#piece-selection input[type=radio] {
+	display: none;
+}
+
+#piece-selection label {
+	display: block;
+	padding: 0.5rem;
+	font-size: 8vmin;
+	text-align: center;
+	width: 8vmin;
+	height: 8vmin;
+}
+
+#piece-selection input[type=radio][name=selected-piece] + label:hover,
+#piece-selection input[type=radio]:checked + label {
+	background-color: var(--selection-color);
+}
+
+label[for=piece-selection-white-pawn]:after		{ content: '♙' }
+label[for=piece-selection-white-rook]:after		{ content: '♖' }
+label[for=piece-selection-white-knight]:after	{ content: '♘' }
+label[for=piece-selection-white-bishop]:after	{ content: '♗' }
+label[for=piece-selection-white-queen]:after	{ content: '♕' }
+label[for=piece-selection-white-king]:after		{ content: '♔' }
+label[for=piece-selection-black-pawn]:after		{ content: '♟' }
+label[for=piece-selection-black-rook]:after		{ content: '♜' }
+label[for=piece-selection-black-knight]:after	{ content: '♞' }
+label[for=piece-selection-black-bishop]:after	{ content: '♝' }
+label[for=piece-selection-black-queen]:after	{ content: '♛' }
+label[for=piece-selection-black-king]:after		{ content: '♚' }
+label[for=piece-selection-delete]:after			{ content: '🗑' }

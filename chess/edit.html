@@ -1,0 +1,126 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Chess - edit board</title>
+		<link rel="stylesheet" href="/styles/main.css"/>
+		<link rel="stylesheet" href="/chess/main.css"/>
+		<link rel="stylesheet" href="/chess/board.css"/>
+		<link rel="stylesheet" href="/chess/edit.css"/>
+		<script src="/scripts/theme.js" defer></script>
+		<script type="module" src="/chess/edit.mjs"></script>
+	</head>
+	<body>
+		<header>
+			<a class="home" href="/"></a>
+			<p>Chess - edit board</p>
+		</header>
+		<main>
+			<div id="toolbar">
+				<h1><a href="/chess">play</a> | edit board</h1>
+				<div id="toolbox">
+					<button id="fen-import">Import from FEN</button>
+					<input id="swap-white" type="checkbox" autocomplete="off" />
+					<label for="swap-white">Swap White</label>
+				</div>
+			</div>
+			<div id="game">
+				<div id="board"></div>
+				<div id="panel">
+					<div id="game-state">
+						<table>
+							<tr>
+								<th>current player</th>
+								<td id="game-state_current-player">
+									<input id="current-player_white" type="radio" name="game-state_current-player" value="white" autocomplete="off"/>
+									<label for="current-player_white">White</label>
+									<input id="current-player_black" type="radio" name="game-state_current-player"  value="black" autocomplete="off"/>
+									<label for="current-player_black">Black</label>
+								</td>
+							</tr>
+							<tr>
+								<th>castle abilities</th>
+								<td id="game-state_castle-abilities">
+									<select id="game-state_castle-abilities_white">
+										<option value="-">-</option>
+										<option value="kq">KQ</option>
+										<option value="k">K</option>
+										<option value="q">Q</option>
+									</select>
+									<select id="game-state_castle-abilities_black">
+										<option value="-">-</option>
+										<option value="kq">kq</option>
+										<option value="k">k</option>
+										<option value="q">q</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<th>en passant file</th>
+								<td>
+									<select id="game-state_en-passant-file">
+										<option value="-">-</option>
+										<option value="0">a</option>
+										<option value="1">b</option>
+										<option value="2">c</option>
+										<option value="3">d</option>
+										<option value="4">e</option>
+										<option value="5">f</option>
+										<option value="6">g</option>
+										<option value="7">h</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<th>half moves</th>
+								<td>
+									<input id="game-state_half-moves" type="number" min="0" autocomplete="off" />
+								</td>
+							</tr>
+							<tr>
+								<th>full moves</th>
+								<td>
+									<input id="game-state_full-moves" type="number" min="1" autocomplete="off" />
+								</td>
+							</tr>
+						</table>
+						<div id="fen">
+							<p id="game-state_fen"></p>
+							<button id="copy-fen-to-clipboard">Copy to clipboard</button>
+						</div>
+					</div>
+					<div id="piece-selection">
+						<input id="piece-selection-white-pawn" name="selected-piece" value="white-pawn" type="radio"/>
+						<label for="piece-selection-white-pawn"></label>
+						<input id="piece-selection-white-bishop" name="selected-piece" value="white-bishop" type="radio"/>
+						<label for="piece-selection-white-bishop"></label>
+						<input id="piece-selection-white-rook" name="selected-piece" value="white-rook" type="radio"/>
+						<label for="piece-selection-white-rook"></label>
+						<input id="piece-selection-white-knight" name="selected-piece" value="white-knight" type="radio"/>
+						<label for="piece-selection-white-knight"></label>
+						<input id="piece-selection-white-queen" name="selected-piece" value="white-queen" type="radio"/>
+						<label for="piece-selection-white-queen"></label>
+						<input id="piece-selection-white-king" name="selected-piece" value="white-king" type="radio"/>
+						<label for="piece-selection-white-king"></label>
+
+						<input id="piece-selection-delete" name="selected-piece" value="delete" type="radio" checked/>
+						<label for="piece-selection-delete"></label>
+
+						<input id="piece-selection-black-pawn" name="selected-piece" value="black-pawn" type="radio"/>
+						<label for="piece-selection-black-pawn"></label>
+						<input id="piece-selection-black-bishop" name="selected-piece" value="black-bishop" type="radio"/>
+						<label for="piece-selection-black-bishop"></label>
+						<input id="piece-selection-black-rook" name="selected-piece" value="black-rook" type="radio"/>
+						<label for="piece-selection-black-rook"></label>
+						<input id="piece-selection-black-knight" name="selected-piece" value="black-knight" type="radio"/>
+						<label for="piece-selection-black-knight"></label>
+						<input id="piece-selection-black-queen" name="selected-piece" value="black-queen" type="radio"/>
+						<label for="piece-selection-black-queen"></label>
+						<input id="piece-selection-black-king" name="selected-piece" value="black-king" type="radio"/>
+						<label for="piece-selection-black-king"></label>
+					</div>
+				</div>
+			</div>
+		</main>
+	</body>
+</html>

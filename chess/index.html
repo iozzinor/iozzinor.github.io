@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Chess - play</title>
+		<link rel="stylesheet" href="/styles/main.css"/>
+		<link rel="stylesheet" href="/chess/main.css"/>
+		<link rel="stylesheet" href="/chess/board.css"/>
+		<link rel="stylesheet" href="/chess/status.css"/>
+		<script src="/scripts/theme.js" defer></script>
+		<script type="module" src="/chess/main.mjs"></script>
+	</head>
+	<body>
+		<header>
+			<a class="home" href="/"></a>
+			<p>Chess - play</p>
+		</header>
+		<main>
+			<div id="toolbar">
+				<h1>play | <a href="/chess/edit.html">edit board</a></h1>
+				<div id="toolbox">
+					<button id="fen-import">Import from FEN</button>
+					<input id="swap-white" type="checkbox" autocomplete="off" />
+					<label for="swap-white">Swap White</label>
+				</div>
+			</div>
+			<div id="game">
+				<div id="board"></div>
+				<div id="game-state">
+					<p id="game-status"></p>
+					<table>
+						<tr><th>current player</th><td id="game-state_current-player"></td></tr>
+						<tr><th>castle abilities</th><td id="game-state_castle-abilities"></td></tr>
+						<tr><th>en passant file</th><td id="game-state_en-passant-file"></td></tr>
+						<tr><th>half moves</th><td id="game-state_half-moves"></td></tr>
+						<tr><th>full moves</th><td id="game-state_full-moves"></td></tr>
+					</table>
+					<p id="game-state_fen"></p>
+				</div>
+			</div>
+		</main>
+	</body>
+</html>

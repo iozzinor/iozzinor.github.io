@@ -1,0 +1,17 @@
+#game-status {
+	margin-top: 0;
+}
+
+#game-status.pending.white:after { content: 'White to play'; }
+#game-status.pending.black:after { content: 'Black to play'; }
+#game-status.draw-agreement:after { content: 'Draw by agreement.'; }
+#game-status.draw-stalemate:after { content: 'Draw by stalemate.'; }
+#game-status.draw-tree-fold:after { content: 'Draw because of three-fold repetition rule.'; }
+#game-status.draw-fifty-move:after { content: 'Draw because of fifty-move rule.'; }
+#game-status.draw-material:after { content: 'Draw due to lack of material.'; }
+#game-status.white-checkmated:after { content: 'Black wins with checkmate!'; }
+#game-status.black-checkmated:after { content: 'White wins with checkmate!'; }
+#game-status.white-resigned:after { content: 'Black wins because White resigned!'; }
+#game-status.black-resigned:after { content: 'White wins because Black resigned!'; }
+#game-status.white-timeout:after { content: 'Black wins because White ran out of time!'; }
+#game-status.black-timeout:after { content: 'White wins because Black ran out of time!'; }
